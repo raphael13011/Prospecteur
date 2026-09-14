@@ -8,8 +8,5 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization" }
       ]
     }
-  ],
-  "rewrites": [
-    { "source": "/api/leads/search/:id", "destination": "/api/leads/search-by-id?id=:id" }
   ]
 }
