@@ -1,0 +1,16 @@
+{
+  "name": "prospecteur",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "db:init": "node scripts/init-db.js",
+    "db:seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.0",
+    "@libsql/client": "^0.14.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "stripe": "^16.12.0"
+  }
+}
