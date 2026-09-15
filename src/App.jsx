@@ -311,7 +311,7 @@ export default function App() {
 
       {/* NAV */}
       <div style={S.topBar}>
-        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); }}><Logo small /></button>
+        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); setError(null); setExpandedId(null); window.scrollTo(0,0); }}><Logo small /></button>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {loggedIn ? (<>
             <button className="gb" style={{ ...S.creditBtn, ...(balance < 3 ? { borderColor: "#fecaca", background: "#fef2f2" } : {}) }} onClick={() => setModalStep("pay")}>
