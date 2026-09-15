@@ -48,7 +48,7 @@ function Logo({ small }) {
   const z = small ? 28 : 36;
   return (<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
     <div style={{ width: z, height: z, borderRadius: 8, background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: small ? 13 : 16 }}>P</div>
-    <span style={{ fontSize: small ? 16 : 20, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Prospecteur</span>
+    <span style={{ fontSize: small ? 16 : 20, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Huntly</span>
   </div>);
 }
 
@@ -228,7 +228,7 @@ function LandingSections() {
 
     {/* FOOTER */}
     <div style={{ textAlign: "center", padding: "24px 0 16px", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 12, color: "#94a3b8" }}>Prospecteur · Paiement sécurisé par Stripe · contact@prospecteur.fr</p>
+      <p style={{ fontSize: 12, color: "#94a3b8" }}>Huntly · Paiement sécurisé par Stripe · hello@huntly.fr</p>
     </div>
   </>);
 }
@@ -346,7 +346,7 @@ export default function App() {
       {view === "search" && (<>
         {/* HERO */}
         {showLanding && (<div style={{ textAlign: "center", padding: "40px 0 4px" }}>
-          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "#eef2ff", fontSize: 13, fontWeight: 600, color: "#6366f1", marginBottom: 16 }}>Prospection IA pour les entreprises françaises</div>
+          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "#eef2ff", fontSize: 13, fontWeight: 600, color: "#6366f1", marginBottom: 16 }}>Trouvez vos clients avec l'IA</div>
           <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.1, color: "#0f172a", marginBottom: 12 }}>Vos prochains clients<br />sont à un clic</h1>
           <p style={{ fontSize: 16, color: "#64748b", maxWidth: 460, margin: "0 auto 24px", lineHeight: 1.6 }}>Choisissez un secteur, une ville, et recevez une liste de prospects qualifiés avec email, téléphone et contact clé.</p>
         </div>)}
