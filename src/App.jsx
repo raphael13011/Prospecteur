@@ -133,10 +133,17 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
 
 /* ─── SEARCH FORM ─── */
 function SearchForm({ industry, setIndustry, location, setLocation, target, setTarget, count, setCount, onSearch, loading, progress, error, loggedIn, balance, selectedNiches, setSelectedNiches }) {
+  const toggleNiche = (n) => {
+    const isSelected = selectedNiches.includes(n.i);
+    const next = isSelected ? selectedNiches.filter(x => x !== n.i) : [...selectedNiches, n.i];
+    setSelectedNiches(next);
+    setIndustry(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.i).join(", "));
+    setTarget(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.t).join(", "));
+  };
   return (
     <div style={S.sCard}>
       <div style={S.nGrid}>{NICHES.map(n => (
-        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(selectedNiches.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => { setSelectedNiches(prev => { const next = prev.includes(n.i) ? prev.filter(x => x !== n.i) : [...prev, n.i]; setIndustry(next.map(ni => NICHES.find(nn => nn.i === ni)?.i).join(", ")); setTarget(next.map(ni => NICHES.find(nn => nn.i === ni)?.t).join(", ")); return next; }); }}>
+        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(selectedNiches.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
           <span style={{ fontSize: 17 }}>{n.icon}</span>
           <span style={{ fontSize: 11, fontWeight: 600, color: selectedNiches.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
         </button>))}</div>
