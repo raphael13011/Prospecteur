@@ -117,7 +117,7 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
   );
 }
 
-function LandingSections({ onCta }) {
+function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
   return (<>
     {/* STATS BAR */}
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0", className: "stat-grid" }}>
@@ -249,9 +249,77 @@ function LandingSections({ onCta }) {
     <div style={{ textAlign: "center", padding: "32px 0 16px" }}>
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginBottom: 8 }}><Logo small /></div>
       <p style={{ fontSize: 12, color: "#94a3b8" }}>Paiement sécurisé par Stripe · hello@huntly.fr</p>
-      <p style={{ fontSize: 11, color: "#cbd5e1", marginTop: 4 }}>© 2026 Huntly. Tous droits réservés.</p>
+      <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 8 }}>
+        <button onClick={onMentions} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Mentions légales</button>
+        <button onClick={onConfidentialite} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Confidentialité</button>
+        <button onClick={onCgu} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>CGU</button>
+      </div>
+      <p style={{ fontSize: 11, color: "#cbd5e1", marginTop: 8 }}>© 2026 Huntly. Tous droits réservés.</p>
     </div>
   </>);
+}
+
+
+function LegalPage({ page, onBack }) {
+  const sty = { padding: "24px 0 48px" };
+  const h2 = { fontSize: 20, fontWeight: 800, marginBottom: 16 };
+  const h3 = { fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8 };
+  const p = { fontSize: 13.5, color: "#475569", lineHeight: 1.7, marginBottom: 10 };
+
+  return (<div style={sty}>
+    <button style={S.bkBtn} onClick={onBack}>← Retour</button>
+
+    {page === "mentions" && (<>
+      <h2 style={h2}>Mentions légales</h2>
+      <h3 style={h3}>Éditeur du site</h3>
+      <p style={p}>Le site Huntly est édité par [Votre nom ou raison sociale], [forme juridique], au capital de [montant] euros.<br/>Siège social : [Adresse complète]<br/>SIRET : [Numéro SIRET]<br/>Directeur de la publication : [Nom du responsable]<br/>Contact : hello@huntly.fr</p>
+      <h3 style={h3}>Hébergement</h3>
+      <p style={p}>Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.<br/>Base de données hébergée par Turso (ChiselStrike Inc.).</p>
+      <h3 style={h3}>Propriété intellectuelle</h3>
+      <p style={p}>L'ensemble des contenus du site Huntly (textes, graphismes, logo, icônes, logiciels) est protégé par le droit de la propriété intellectuelle. Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation expresse est interdite.</p>
+      <h3 style={h3}>Données personnelles</h3>
+      <p style={p}>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles. Pour exercer ce droit, contactez : hello@huntly.fr.</p>
+      <h3 style={h3}>Cookies</h3>
+      <p style={p}>Le site utilise uniquement des cookies techniques nécessaires à son fonctionnement (authentification, session). Aucun cookie publicitaire ou de tracking n'est utilisé.</p>
+    </>)}
+
+    {page === "confidentialite" && (<>
+      <h2 style={h2}>Politique de confidentialité</h2>
+      <h3 style={h3}>1. Données collectées</h3>
+      <p style={p}>Lors de votre inscription, nous collectons : nom, adresse email, nom d'entreprise (optionnel). Lors de l'utilisation du service, nous collectons : historique de recherches, leads générés. Lors du paiement, vos données bancaires sont traitées directement par Stripe et ne transitent jamais par nos serveurs.</p>
+      <h3 style={h3}>2. Finalité du traitement</h3>
+      <p style={p}>Vos données sont utilisées pour : fournir le service de génération de leads, gérer votre compte et vos crédits, vous contacter en cas de besoin (support, mises à jour importantes). Nous ne vendons ni ne partageons vos données personnelles avec des tiers à des fins commerciales.</p>
+      <h3 style={h3}>3. Durée de conservation</h3>
+      <p style={p}>Vos données de compte sont conservées tant que votre compte est actif. Vos leads et historique de recherche sont conservés tant que votre compte existe. Vous pouvez demander la suppression de votre compte et de toutes vos données à tout moment en contactant hello@huntly.fr.</p>
+      <h3 style={h3}>4. Données des leads générés</h3>
+      <p style={p}>Les informations sur les entreprises (noms, emails, téléphones) sont obtenues à partir de sources publiquement accessibles sur le web (sites d'entreprises, annuaires professionnels, réseaux sociaux publics). Aucune donnée n'est obtenue par des moyens illicites.</p>
+      <h3 style={h3}>5. Sécurité</h3>
+      <p style={p}>Nous mettons en œuvre des mesures techniques et organisationnelles appropriées : chiffrement des mots de passe (bcrypt), connexions HTTPS, tokens JWT pour l'authentification, hébergement sécurisé.</p>
+      <h3 style={h3}>6. Vos droits</h3>
+      <p style={p}>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression, de limitation du traitement et de portabilité de vos données. Pour exercer ces droits : hello@huntly.fr.</p>
+    </>)}
+
+    {page === "cgu" && (<>
+      <h2 style={h2}>Conditions Générales d'Utilisation</h2>
+      <h3 style={h3}>1. Objet</h3>
+      <p style={p}>Les présentes CGU régissent l'utilisation du service Huntly, un outil de génération de leads B2B propulsé par intelligence artificielle. En utilisant le service, vous acceptez les présentes conditions.</p>
+      <h3 style={h3}>2. Description du service</h3>
+      <p style={p}>Huntly permet de rechercher des entreprises correspondant à des critères (secteur d'activité, localisation) et de recevoir des informations de contact (nom, email, téléphone, site web) extraites de sources publiques sur le web.</p>
+      <h3 style={h3}>3. Inscription et compte</h3>
+      <p style={p}>L'accès au service nécessite la création d'un compte. Vous êtes responsable de la confidentialité de vos identifiants. Vous devez fournir des informations exactes lors de l'inscription.</p>
+      <h3 style={h3}>4. Crédits et paiement</h3>
+      <p style={p}>Le service fonctionne sur un système de crédits prépayés. 1 crédit = 1 lead généré. Les crédits achetés n'expirent pas et ne sont pas remboursables sauf en cas de défaut du service. Les paiements sont traités par Stripe de manière sécurisée.</p>
+      <h3 style={h3}>5. Utilisation acceptable</h3>
+      <p style={p}>Vous vous engagez à utiliser le service conformément à la législation en vigueur, notamment le RGPD. Il est interdit d'utiliser les données obtenues pour du spam, du harcèlement ou toute activité illégale. Vous êtes responsable de l'usage que vous faites des leads obtenus.</p>
+      <h3 style={h3}>6. Limitation de responsabilité</h3>
+      <p style={p}>Les informations fournies par Huntly proviennent de sources publiques et sont générées par intelligence artificielle. Nous ne garantissons pas l'exactitude, l'exhaustivité ou l'actualité des données. Huntly ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation des données fournies.</p>
+      <h3 style={h3}>7. Modification des CGU</h3>
+      <p style={p}>Nous nous réservons le droit de modifier les présentes CGU. Les utilisateurs seront informés de toute modification substantielle par email.</p>
+      <h3 style={h3}>8. Droit applicable</h3>
+      <p style={p}>Les présentes CGU sont régies par le droit français. Tout litige sera soumis aux tribunaux compétents de [Ville].</p>
+      <p style={p}>Dernière mise à jour : septembre 2026.</p>
+    </>)}
+  </div>);
 }
 
 export default function App() {
@@ -276,6 +344,7 @@ export default function App() {
   const [emailModal, setEmailModal] = useState(null);
   const [genEmail, setGenEmail] = useState(null);
   const [genLoading, setGenLoading] = useState(false);
+  const [legalPage, setLegalPage] = useState(null);
   const resRef = useRef(null);
   const formRef = useRef(null);
   const flash = m => { setToast(m); setTimeout(() => setToast(null), 2500); };
@@ -343,7 +412,7 @@ export default function App() {
     setGenLoading(false);
   };
 
-  const goHome = () => { setView("search"); setResults(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
+  const goHome = () => { setView("search"); setResults(null); setLegalPage(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
 
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
 
@@ -396,7 +465,7 @@ export default function App() {
         </div>
       </div>
 
-      {view === "account" && (<div>
+      {!legalPage && view === "account" && (<div>
         <button style={S.bkBtn} onClick={() => setView("search")}>← Retour</button>
         <div style={S.card}><div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}><div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div><div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div></div>
           <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{balance}</div><div style={{ fontSize: 12, color: "#64748b" }}>crédits</div></div><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{history.length}</div><div style={{ fontSize: 12, color: "#64748b" }}>recherches</div></div></div>
@@ -405,14 +474,16 @@ export default function App() {
         <button className="gb" style={{ ...S.gBtn, color: "#94a3b8" }} onClick={logout}>Se déconnecter</button>
       </div>)}
 
-      {view === "history" && (<div><h2 style={S.secT}>Historique</h2>
+      {legalPage && (<LegalPage page={legalPage} onBack={() => setLegalPage(null)} />)}
+
+      {!legalPage && view === "history" && (<div><h2 style={S.secT}>Historique</h2>
         {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setPicked([]); setView("search"); }}>
           <div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div>
           <span style={{ color: "#4f46e5", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
         </div>))}
       </div>)}
 
-      {view === "search" && (<>
+      {!legalPage && view === "search" && (<>
         {/* HERO */}
         {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
           <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#4f46e5", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
@@ -478,7 +549,7 @@ export default function App() {
           {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
-        {showLanding && <LandingSections onCta={scrollToForm} />}
+        {showLanding && <LandingSections onCta={scrollToForm} onMentions={() => { setLegalPage("mentions"); window.scrollTo(0,0); }} onConfidentialite={() => { setLegalPage("confidentialite"); window.scrollTo(0,0); }} onCgu={() => { setLegalPage("cgu"); window.scrollTo(0,0); }} />}
       </>)}
     </div>
   );
