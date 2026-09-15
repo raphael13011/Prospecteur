@@ -44,6 +44,7 @@ function Input({ label, error, ...p }) {
     <input style={{ ...S.input, ...(error ? { borderColor: "#ef4444" } : {}) }} {...p} />
   </div>);
 }
+
 function Logo({ small }) {
   const z = small ? 28 : 36;
   const c = z / 2;
@@ -58,20 +59,18 @@ function Logo({ small }) {
   </div>);
 }
 
-/* ─── STEP MODAL ─── */
 function StepModal({ step, onAuth, onPaid, onClose, count }) {
   const [mode, setMode] = useState("signup");
   const [email, setEmail] = useState(""); const [pw, setPw] = useState("");
   const [name, setName] = useState(""); const [company, setCompany] = useState("");
   const [err, setErr] = useState(""); const [ld, setLd] = useState(false);
   const [buying, setBuying] = useState(null);
-
   const doAuth = async () => {
     setErr(""); setLd(true);
     try {
-      const action = mode === "signup" ? "signup" : "login";
+      const a = mode === "signup" ? "signup" : "login";
       const bd = mode === "signup" ? { email, password: pw, name, company } : { email, password: pw };
-      const d = await api("/auth?action=" + action, { method: "POST", body: bd });
+      const d = await api("/auth?action=" + a, { method: "POST", body: bd });
       saveToken(d.token); onAuth(d.token, d.user, d.balance);
     } catch (e) { setErr(e.message); }
     setLd(false);
@@ -82,20 +81,13 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
     try { const d = await api("/billing?action=checkout", { method: "POST", body: { pack: packId }, token: tkn }); if (d.checkout_url) window.location.href = d.checkout_url; } catch (e) { alert(e.message); }
     setBuying(null);
   };
-
   return (
     <div style={S.overlay} onClick={onClose}><div style={S.modal} onClick={e => e.stopPropagation()}>
       <button style={S.closeBtn} onClick={onClose}>✕</button>
       <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div>
-          <span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span>
-        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span></div>
         <div style={{ width: 24, height: 1, background: "#e5e7eb", alignSelf: "center" }} />
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div>
-          <span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span>
-        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span></div>
       </div>
       {step === "auth" && (<>
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>{mode === "signup" ? "Créez votre compte" : "Connexion"}</h2>
@@ -108,8 +100,7 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
         </div>
         <button style={{ ...S.pBtn, marginTop: 16, ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
         <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#64748b" }}>
-          {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> :
-            <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
+          {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> : <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
         </div>
       </>)}
       {step === "pay" && (<>
@@ -131,122 +122,60 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
   );
 }
 
-/* ─── SEARCH FORM ─── */
-function SearchForm({ industry, setIndustry, location, setLocation, target, setTarget, count, setCount, onSearch, loading, progress, error, loggedIn, balance, selectedNiches, setSelectedNiches }) {
-  const toggleNiche = (n) => {
-    const isSelected = selectedNiches.includes(n.i);
-    const next = isSelected ? selectedNiches.filter(x => x !== n.i) : [...selectedNiches, n.i];
-    setSelectedNiches(next);
-    setIndustry(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.i).join(", "));
-    setTarget(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.t).join(", "));
-  };
-  return (
-    <div style={S.sCard}>
-      <div style={S.nGrid}>{NICHES.map(n => (
-        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(selectedNiches.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
-          <span style={{ fontSize: 17 }}>{n.icon}</span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: selectedNiches.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
-        </button>))}</div>
-      <div style={S.fRow}>
-        <Input label="Secteur d'activité" value={industry} onChange={e => setIndustry(e.target.value)} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
-        <Input label="Ville / Région" value={location} onChange={e => setLocation(e.target.value)} placeholder="Ex : Marseille, Île-de-France…" />
-      </div>
-      <div style={S.fRow}>
-        <div style={{ flex: 2 }}><Input label="Cible (optionnel)" value={target} onChange={e => setTarget(e.target.value)} placeholder="Ex : Indépendants, +10 employés…" /></div>
-        <div style={{ flex: 0, minWidth: 90 }}><label style={S.label}>Quantité</label><select style={S.input} value={count} onChange={e => setCount(e.target.value)}>{[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
-      </div>
-      {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
-      {error && <div style={S.errBox}>{error}</div>}
-      <button style={{ ...S.pBtn, marginTop: 10, ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={onSearch}>
-        {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
-      </button>
-    </div>
-  );
-}
-
-/* ─── LANDING SECTIONS ─── */
 function LandingSections() {
   return (<>
-    {/* HOW IT WORKS */}
     <div style={{ padding: "48px 0 32px" }}>
       <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 32, letterSpacing: "-0.02em" }}>Comment ça marche</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
-        {[
-          { n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un secteur et une ville. Plus de 12 niches pré-configurées pour démarrer en 1 clic." },
-          { n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel et identifie des entreprises correspondant à vos critères." },
-          { n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site web, dirigeant — tout est prêt. Exportez en CSV en 1 clic." },
-        ].map(s => (
-          <div key={s.n} style={{ textAlign: "center", padding: "0 8px" }}>
-            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, margin: "0 auto 12px" }}>{s.n}</div>
-            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{s.title}</div>
-            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
-          </div>
-        ))}
+        {[{ n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville." },
+          { n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel et identifie des entreprises." },
+          { n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site web, dirigeant — exportez en CSV." }
+        ].map(s => (<div key={s.n} style={{ textAlign: "center", padding: "0 8px" }}>
+          <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, margin: "0 auto 12px" }}>{s.n}</div>
+          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{s.title}</div>
+          <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
+        </div>))}
       </div>
     </div>
-
-    {/* PREVIEW */}
     <div style={{ padding: "24px 0 32px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8, letterSpacing: "-0.02em" }}>Ce que vous obtenez</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>Ce que vous obtenez</h2>
       <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>Exemple : recherche "Plombiers à Lyon"</p>
       <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden" }}>
-        {FAKE_LEADS.map((l, i) => (
-          <div key={i} style={{ padding: "14px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontWeight: 700, fontSize: 14 }}>{l.company}</div>
-              <div style={{ fontSize: 12, color: "#94a3b8" }}>{l.location}</div>
-            </div>
-            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-              {l.email && <span style={S.chOk}>✉️</span>}
-              {l.phone && <span style={S.chOk}>📞</span>}
-              <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.score}%</span>
-            </div>
-          </div>
-        ))}
+        {FAKE_LEADS.map((l, i) => (<div key={i} style={{ padding: "14px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div><div style={{ fontWeight: 700, fontSize: 14 }}>{l.company}</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{l.location}</div></div>
+          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>{l.email && <span style={S.chOk}>✉️</span>}{l.phone && <span style={S.chOk}>📞</span>}<span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.score}%</span></div>
+        </div>))}
       </div>
     </div>
-
-    {/* PRICING */}
     <div style={{ padding: "24px 0 32px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8, letterSpacing: "-0.02em" }}>Tarifs simples, sans engagement</h2>
-      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>Payez uniquement ce que vous utilisez. 1 crédit = 1 lead.</p>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>Tarifs simples, sans engagement</h2>
+      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>1 crédit = 1 lead trouvé.</p>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, maxWidth: 540, margin: "0 auto" }}>
-        {Object.entries(PACKS).map(([id, p]) => (
-          <div key={id} style={{ ...S.card, ...(p.popular ? { border: "2px solid #6366f1" } : {}), textAlign: "center", position: "relative", padding: "24px 16px" }}>
-            {p.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 12px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + populaire</div>}
-            <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em" }}>{p.price}</div>
-            <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>{p.credits} crédits</div>
-            <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{p.per}</div>
-          </div>
-        ))}
+        {Object.entries(PACKS).map(([id, p]) => (<div key={id} style={{ ...S.card, ...(p.popular ? { border: "2px solid #6366f1" } : {}), textAlign: "center", position: "relative", padding: "24px 16px" }}>
+          {p.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 12px", borderRadius: 20 }}>Populaire</div>}
+          <div style={{ fontSize: 32, fontWeight: 800 }}>{p.price}</div>
+          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>{p.credits} crédits</div>
+          <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{p.per}</div>
+        </div>))}
       </div>
     </div>
-
-    {/* FAQ */}
     <div style={{ padding: "24px 0 40px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 20, letterSpacing: "-0.02em" }}>Questions fréquentes</h2>
-      {[
-        { q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires, LinkedIn, pages légales. Aucune base de données statique." },
-        { q: "Est-ce que les contacts sont fiables ?", a: "Chaque lead a un score de pertinence. Les emails et téléphones sont extraits de sources publiques et vérifiés quand c'est possible." },
-        { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie, sans limite de temps." },
-        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic. Compatible avec tous les CRM et tableurs." },
-        { q: "Est-ce conforme au RGPD ?", a: "Les données sont issues de sources publiques. Aucune donnée personnelle n'est stockée au-delà de votre compte." },
-      ].map(f => (
-        <div key={f.q} style={{ borderBottom: "1px solid #f1f5f9", padding: "14px 0" }}>
-          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{f.q}</div>
-          <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{f.a}</div>
-        </div>
-      ))}
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 20 }}>Questions fréquentes</h2>
+      {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites, annuaires, LinkedIn, pages légales." },
+        { q: "Les contacts sont-ils fiables ?", a: "Chaque lead a un score. Les emails et téléphones viennent de sources publiques." },
+        { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie." },
+        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic." },
+      ].map(f => (<div key={f.q} style={{ borderBottom: "1px solid #f1f5f9", padding: "14px 0" }}>
+        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{f.q}</div>
+        <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{f.a}</div>
+      </div>))}
     </div>
-
-    {/* FOOTER */}
     <div style={{ textAlign: "center", padding: "24px 0 16px", borderTop: "1px solid #f1f5f9" }}>
       <p style={{ fontSize: 12, color: "#94a3b8" }}>Huntly · Paiement sécurisé par Stripe · hello@huntly.fr</p>
     </div>
   </>);
 }
 
-/* ─── MAIN APP ─── */
 export default function App() {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
@@ -261,10 +190,10 @@ export default function App() {
   const [progress, setProgress] = useState("");
   const [expandedId, setExpandedId] = useState(null);
   const [industry, setIndustry] = useState("");
-  const [selectedNiches, setSelectedNiches] = useState([]);
   const [location, setLocation] = useState("");
   const [target, setTarget] = useState("");
   const [count, setCount] = useState("10");
+  const [picked, setPicked] = useState([]);
   const [toast, setToast] = useState(null);
   const resRef = useRef(null);
   const flash = m => { setToast(m); setTimeout(() => setToast(null), 2500); };
@@ -281,6 +210,14 @@ export default function App() {
         setTimeout(() => { const t2 = loadToken(); if (t2) api("/auth?action=me", { token: t2 }).then(d => { setBalance(d.balance); flash("Crédits ajoutés !"); }).catch(() => {}); }, 1000); }
     })();
   }, []);
+
+  const toggleNiche = (n) => {
+    const isOn = picked.includes(n.i);
+    const next = isOn ? picked.filter(x => x !== n.i) : [...picked, n.i];
+    setPicked(next);
+    setIndustry(next.join(", "));
+    setTarget(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.t).join(", "));
+  };
 
   const onAuth = (t, u, b) => { setToken(t); setUser(u); setBalance(b); b < 1 ? setModalStep("pay") : (() => { setModalStep(null); doSearch(t); })(); };
   const logout = () => { clearToken(); setToken(null); setUser(null); setBalance(0); setResults(null); setHistory([]); };
@@ -314,6 +251,8 @@ export default function App() {
     } catch { flash("Erreur"); }
   };
 
+  const goHome = () => { setView("search"); setResults(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); window.scrollTo(0, 0); };
+
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
 
   const showLanding = !loggedIn && !results && !loading;
@@ -323,9 +262,8 @@ export default function App() {
       {toast && <div style={S.toast}>{toast}</div>}
       {modalStep && <StepModal step={modalStep} count={count} onAuth={onAuth} onPaid={token} onClose={() => setModalStep(null)} />}
 
-      {/* NAV */}
       <div style={S.topBar}>
-        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); setError(null); setExpandedId(null); setSelectedNiches([]); window.scrollTo(0,0); }}><Logo small /></button>
+        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={goHome}><Logo small /></button>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {loggedIn ? (<>
             <button className="gb" style={{ ...S.creditBtn, ...(balance < 3 ? { borderColor: "#fecaca", background: "#fef2f2" } : {}) }} onClick={() => setModalStep("pay")}>
@@ -341,7 +279,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* ACCOUNT */}
       {view === "account" && (<div>
         <button style={S.bkBtn} onClick={() => setView("search")}>← Retour</button>
         <div style={S.card}><div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}><div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div><div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div></div>
@@ -351,23 +288,42 @@ export default function App() {
         <button className="gb" style={{ ...S.gBtn, color: "#94a3b8" }} onClick={logout}>Se déconnecter</button>
       </div>)}
 
-      {/* HISTORY */}
       {view === "history" && (<div><h2 style={S.secT}>Historique</h2>
-        {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setView("search"); }}><div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div><span style={{ color: "#6366f1", fontSize: 13, fontWeight: 600 }}>Relancer →</span></div>))}
+        {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setPicked([]); setView("search"); }}>
+          <div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div>
+          <span style={{ color: "#6366f1", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
+        </div>))}
       </div>)}
 
-      {/* SEARCH VIEW */}
       {view === "search" && (<>
-        {/* HERO */}
         {showLanding && (<div style={{ textAlign: "center", padding: "40px 0 4px" }}>
           <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "#eef2ff", fontSize: 13, fontWeight: 600, color: "#6366f1", marginBottom: 16 }}>Trouvez vos clients avec l'IA</div>
           <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.1, color: "#0f172a", marginBottom: 12 }}>Vos prochains clients<br />sont à un clic</h1>
-          <p style={{ fontSize: 16, color: "#64748b", maxWidth: 460, margin: "0 auto 24px", lineHeight: 1.6 }}>Choisissez un secteur, une ville, et recevez une liste de prospects qualifiés avec email, téléphone et contact clé.</p>
+          <p style={{ fontSize: 16, color: "#64748b", maxWidth: 460, margin: "0 auto 24px", lineHeight: 1.6 }}>Choisissez un ou plusieurs secteurs, une ville, et recevez des prospects qualifiés avec email, téléphone et contact clé.</p>
         </div>)}
 
-        {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Nouvelle recherche</h2></div>)}
+        {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800 }}>Nouvelle recherche</h2></div>)}
 
-        <SearchForm industry={industry} setIndustry={setIndustry} location={location} setLocation={setLocation} target={target} setTarget={setTarget} count={count} setCount={setCount} onSearch={handleSearch} loading={loading} progress={progress} error={error} loggedIn={loggedIn} balance={balance} selectedNiches={selectedNiches} setSelectedNiches={setSelectedNiches} />
+        <div style={S.sCard}>
+          <div style={S.nGrid}>{NICHES.map(n => (
+            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
+              <span style={{ fontSize: 17 }}>{n.icon}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
+            </button>))}</div>
+          <div style={S.fRow}>
+            <Input label="Secteur d'activité" value={industry} onChange={e => { setIndustry(e.target.value); setPicked([]); }} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
+            <Input label="Ville / Région" value={location} onChange={e => setLocation(e.target.value)} placeholder="Ex : Marseille, Île-de-France…" />
+          </div>
+          <div style={S.fRow}>
+            <div style={{ flex: 2 }}><Input label="Cible (optionnel)" value={target} onChange={e => setTarget(e.target.value)} placeholder="Ex : Indépendants, +10 employés…" /></div>
+            <div style={{ flex: 0, minWidth: 90 }}><label style={S.label}>Quantité</label><select style={S.input} value={count} onChange={e => setCount(e.target.value)}>{[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+          </div>
+          {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
+          {error && <div style={S.errBox}>{error}</div>}
+          <button style={{ ...S.pBtn, marginTop: 10, ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
+            {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
+          </button>
+        </div>
 
         {loading && <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{[1, 2, 3].map(i => <div key={i} style={S.skel}><div style={{ ...S.skelL, width: "50%" }} /><div style={{ ...S.skelL, width: "30%", height: 10, marginTop: 6 }} /></div>)}</div>}
 
@@ -400,7 +356,6 @@ export default function App() {
           {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
-        {/* LANDING SECTIONS (below search form, only for visitors) */}
         {showLanding && <LandingSections />}
       </>)}
     </div>
