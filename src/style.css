@@ -1,0 +1,10 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #1e293b; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+input:focus, select:focus { border-color: #818cf8 !important; box-shadow: 0 0 0 3px rgba(129,140,248,.12) !important; }
+::placeholder { color: #b0b0b0; }
+.nb:hover { border-color: #c7d2fe !important; background: #f5f3ff !important; }
+.lc:hover { border-color: #c7d2fe !important; }
+.gb:hover, .hi:hover { background: #f8fafc !important; }
