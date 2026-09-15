@@ -273,6 +273,9 @@ export default function App() {
   const [count, setCount] = useState("10");
   const [picked, setPicked] = useState([]);
   const [toast, setToast] = useState(null);
+  const [emailModal, setEmailModal] = useState(null);
+  const [genEmail, setGenEmail] = useState(null);
+  const [genLoading, setGenLoading] = useState(false);
   const resRef = useRef(null);
   const formRef = useRef(null);
   const flash = m => { setToast(m); setTimeout(() => setToast(null), 2500); };
@@ -319,7 +322,7 @@ export default function App() {
       const d = await api("/leads?action=generate", { method: "POST", token: t, body: { industry, location, target, count: parseInt(count) || 10 } });
       setResults({ leads: d.leads, meta: d.meta }); setBalance(d.balance);
       try { const h = await api("/leads?action=history", { token: t }); setHistory(h.searches || []); } catch {}
-      flash(d.leads.length + " prospect" + (d.leads.length > 1 ? "s" : "") + " trouvé" + (d.leads.length > 1 ? "s" : ""));
+      flash(d.meta.new_count + " nouveau" + (d.meta.new_count > 1 ? "x" : "") + (d.meta.duplicate_count > 0 ? " · " + d.meta.duplicate_count + " doublon" + (d.meta.duplicate_count > 1 ? "s" : "") + " ignoré" + (d.meta.duplicate_count > 1 ? "s" : "") : ""));
       setTimeout(() => resRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
     } catch (e) { setError(e.message); } finally { clearInterval(iv); setLoading(false); setProgress(""); }
   };
@@ -331,6 +334,15 @@ export default function App() {
     } catch { flash("Erreur"); }
   };
 
+  const generateEmail = async (lead) => {
+    setEmailModal(lead); setGenEmail(null); setGenLoading(true);
+    try {
+      const d = await api("/leads?action=generate-email", { method: "POST", token, body: { lead, userCompany: user?.company || "", userActivity: "" } });
+      setGenEmail(d.email); setBalance(d.balance);
+    } catch (e) { flash("Erreur: " + e.message); setEmailModal(null); }
+    setGenLoading(false);
+  };
+
   const goHome = () => { setView("search"); setResults(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
 
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
@@ -340,6 +352,31 @@ export default function App() {
   return (
     <div style={S.root}>
       {toast && <div style={S.toast}>{toast}</div>}
+      {emailModal && (
+        <div style={S.overlay} onClick={() => setEmailModal(null)}><div style={{...S.modal, maxWidth: 520}} onClick={e => e.stopPropagation()}>
+          <button style={S.closeBtn} onClick={() => setEmailModal(null)}>✕</button>
+          <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Email pour {emailModal.company}</h2>
+          {genLoading ? (
+            <div style={{ textAlign: "center", padding: "32px 0" }}><div style={S.spin} /><p style={{ marginTop: 12, color: "#64748b", fontSize: 13 }}>Rédaction en cours...</p></div>
+          ) : genEmail ? (
+            <div>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 4 }}>OBJET</div>
+                <div style={{ padding: "10px 14px", background: "#f8fafc", borderRadius: 8, fontSize: 14, fontWeight: 600 }}>{genEmail.subject}</div>
+              </div>
+              <div style={{ marginTop: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#94a3b8", marginBottom: 4 }}>CORPS</div>
+                <div style={{ padding: "14px", background: "#f8fafc", borderRadius: 8, fontSize: 13.5, lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{genEmail.body}</div>
+              </div>
+              <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
+                <button className="cta-btn" style={{ ...S.pBtn, background: "#4f46e5", fontSize: 13 }} onClick={() => { navigator.clipboard.writeText("Objet: " + genEmail.subject + "\n\n" + genEmail.body); flash("Copié !"); }}>Copier l'email</button>
+                {emailModal.email && <a href={"mailto:" + emailModal.email + "?subject=" + encodeURIComponent(genEmail.subject) + "&body=" + encodeURIComponent(genEmail.body)} style={{ ...S.gBtn, display: "flex", alignItems: "center", justifyContent: "center", flex: 1, textDecoration: "none", textAlign: "center" }}>Ouvrir dans Mail</a>}
+              </div>
+              <p style={{ fontSize: 11, color: "#94a3b8", marginTop: 8, textAlign: "center" }}>1 crédit utilisé</p>
+            </div>
+          ) : null}
+        </div></div>
+      )}
       {modalStep && <StepModal step={modalStep} count={count} onAuth={onAuth} onPaid={token} onClose={() => setModalStep(null)} />}
 
       <div style={S.topBar}>
@@ -426,7 +463,7 @@ export default function App() {
                 {l.size && <span style={S.ch}>👥 {l.size}</span>}
                 {l.website && <a href={l.website} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>🌐 Site</a>}
                 {l.linkedin && <a href={l.linkedin} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>💼 LinkedIn</a>}
-                {l.email && <span style={S.chOk}>✉️ Email</span>}{l.phone && <span style={S.chOk}>📞 Tél.</span>}
+                {l.email && <span style={l.email_verified ? S.chOk : S.chWarn}>{l.email_verified ? "✉️ Email vérifié" : "✉️ Email non vérifié"}</span>}{l.phone && <span style={S.chOk}>📞 Tél.</span>}{l.is_duplicate && <span style={S.chDup}>🔄 Doublon</span>}
               </div>
               {expandedId === i && (<div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9", animation: "slideUp .2s ease" }}><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 18px" }}>
                 {l.contact_name && <div><div style={S.dl}>Contact</div><div style={S.dv}>{l.contact_name}{l.contact_role ? " — " + l.contact_role : ""}</div></div>}
@@ -434,7 +471,9 @@ export default function App() {
                 {l.phone && <div><div style={S.dl}>Téléphone</div><a href={"tel:" + l.phone} style={S.da}>{l.phone}</a></div>}
                 {l.website && <div><div style={S.dl}>Site</div><a href={l.website} target="_blank" rel="noopener noreferrer" style={S.da}>{l.website}</a></div>}
                 {l.reason && <div style={{ gridColumn: "1/-1" }}><div style={S.dl}>Pertinence</div><div style={S.dv}>{l.reason}</div></div>}
-              </div></div>)}
+              </div>
+              <button className="cta-btn" onClick={(e) => { e.stopPropagation(); generateEmail(l); }} style={{ marginTop: 12, padding: "9px 16px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", width: "100%" }}>✍️ Générer un email de prospection</button>
+              </div>)}
             </div>))}
           {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
@@ -483,5 +522,7 @@ const S = {
   dv: { fontSize: 14, color: "#1e293b", lineHeight: 1.4 },
   da: { fontSize: 14, color: "#4f46e5", textDecoration: "none" },
   ups: { border: "2px solid #4f46e5", borderRadius: 14, padding: "24px", marginTop: 20, background: "#fafaff" },
+  chWarn: { padding: "3px 9px", background: "#fffbeb", borderRadius: 6, fontSize: 12, color: "#d97706", fontWeight: 500 },
+  chDup: { padding: "3px 9px", background: "#f1f5f9", borderRadius: 6, fontSize: 12, color: "#94a3b8", fontStyle: "italic" },
   packRow: { display: "flex", alignItems: "center", width: "100%", padding: "14px 16px", border: "1px solid #e5e7eb", borderRadius: 10, background: "#fff", cursor: "pointer", position: "relative", transition: "all .15s" },
 };

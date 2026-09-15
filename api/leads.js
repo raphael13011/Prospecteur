@@ -1,7 +1,8 @@
 const Credit = require("../lib/models/credit");
 const { Search, Lead } = require("../lib/models/search");
-const { generateLeads } = require("../lib/services/leadGenerator");
+const { generateLeads, generateProspectEmail } = require("../lib/services/leadGenerator");
 const { requireAuth, handleCors } = require("../lib/auth");
+const db = require("../lib/db");
 
 module.exports.config = { maxDuration: 60 };
 
@@ -19,16 +20,58 @@ module.exports = async function handler(req, res) {
     if (!industry?.trim()) return res.status(400).json({ error: "Secteur requis." });
     if (!location?.trim()) return res.status(400).json({ error: "Localisation requise." });
     const balance = await Credit.getBalance(userId);
-    if (balance < 1) return res.status(429).json({ error: "Plus de crédits. Rechargez votre compte.", balance: 0 });
+    if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
     const count = Math.min(parseInt(rawCount) || 10, 20, balance);
     try {
       const leads = await generateLeads({ industry, location, target, count });
-      const searchId = await Search.create(userId, { industry, location, target, leadCount: leads.length });
-      await Lead.createBulk(searchId, userId, leads);
-      await Credit.consume(userId, leads.length);
+
+      // Dedup: check against existing leads for this user
+      const existing = await db.execute({
+        sql: "SELECT company, email FROM leads WHERE user_id = ?",
+        args: [userId],
+      });
+      const existingSet = new Set(existing.rows.map(r => (r.company || "").toLowerCase()));
+      const existingEmails = new Set(existing.rows.filter(r => r.email).map(r => r.email.toLowerCase()));
+
+      const deduped = leads.map(l => ({
+        ...l,
+        is_duplicate: existingSet.has((l.company || "").toLowerCase()) || 
+                      (l.email && existingEmails.has(l.email.toLowerCase())),
+      }));
+
+      const newLeads = deduped.filter(l => !l.is_duplicate);
+      const dupCount = deduped.length - newLeads.length;
+
+      // Save search
+      const searchId = await Search.create(userId, { industry, location, target, leadCount: newLeads.length });
+      if (newLeads.length > 0) await Lead.createBulk(searchId, userId, newLeads);
+
+      // Only charge for new leads
+      if (newLeads.length > 0) await Credit.consume(userId, newLeads.length);
       const newBalance = await Credit.getBalance(userId);
-      res.json({ search_id: searchId, leads, meta: { industry, location, target: target || null, count: leads.length }, balance: newBalance });
+
+      res.json({
+        search_id: searchId,
+        leads: deduped,
+        meta: { industry, location, target: target || null, count: deduped.length, new_count: newLeads.length, duplicate_count: dupCount },
+        balance: newBalance,
+      });
     } catch (err) { console.error(err); res.status(500).json({ error: err.message || "Erreur génération." }); }
+    return;
+  }
+
+  // ─── POST generate-email ───
+  if (action === "generate-email" && req.method === "POST") {
+    const { lead, userCompany, userActivity } = req.body;
+    if (!lead?.company) return res.status(400).json({ error: "Lead requis." });
+    const balance = await Credit.getBalance(userId);
+    if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
+    try {
+      const email = await generateProspectEmail({ lead, userCompany, userActivity });
+      await Credit.consume(userId, 1);
+      const newBalance = await Credit.getBalance(userId);
+      res.json({ email, balance: newBalance });
+    } catch (err) { console.error(err); res.status(500).json({ error: "Erreur génération email." }); }
     return;
   }
 
@@ -53,10 +96,10 @@ module.exports = async function handler(req, res) {
     const searchId = req.query.search_id ? parseInt(req.query.search_id) : null;
     const leads = await Lead.getExportData(userId, searchId);
     if (!leads.length) return res.status(404).json({ error: "Aucun lead à exporter." });
-    const header = "Entreprise,Site,Secteur,Ville,Description,Taille,Contact,Poste,Email,Téléphone,LinkedIn,Score\n";
-    const rows = leads.map(l => [l.company,l.website,l.industry,l.location,`"${(l.description||"").replace(/"/g,'""')}"`,l.size,l.contact_name,l.contact_role,l.email,l.phone,l.linkedin,l.score].join(","));
+    const header = "Entreprise,Site,Secteur,Ville,Description,Taille,Contact,Poste,Email,Email vérifié,Téléphone,LinkedIn,Score\n";
+    const rows = leads.map(l => [l.company,l.website,l.industry,l.location,'"'+(l.description||"").replace(/"/g,'""')+'"',l.size,l.contact_name,l.contact_role,l.email,l.email_verified?"Oui":"Non",l.phone,l.linkedin,l.score].join(","));
     res.setHeader("Content-Type", "text/csv; charset=utf-8");
-    res.setHeader("Content-Disposition", `attachment; filename="leads-${new Date().toISOString().slice(0,10)}.csv"`);
+    res.setHeader("Content-Disposition", 'attachment; filename="leads-'+new Date().toISOString().slice(0,10)+'.csv"');
     res.send(header + rows.join("\n"));
     return;
   }
