@@ -123,7 +123,7 @@ function LandingSections({ onCta }) {
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0", className: "stat-grid" }}>
       {[{ n: "30 sec", d: "Pour obtenir vos leads" }, { n: "12+", d: "Secteurs pré-configurés" }, { n: "0,12€", d: "Le lead le moins cher" }].map((s, i) => (
         <div key={i} className="stat-card" style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 12 }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: "#4f46e5", letterSpacing: "-0.02em" }}>{s.n}</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#4f46e5", letterSpacing: "-0.02em" }}>{s.n}</div>
           <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{s.d}</div>
         </div>
       ))}
@@ -193,7 +193,7 @@ function LandingSections({ onCta }) {
           <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #4f46e5" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#fafaff" : "#fff" }}>
             {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
             <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8 }}>{p.desc}</div>
-            <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
+            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginTop: 4 }}>{p.credits} crédits</div>
             <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, marginBottom: 16 }}>{p.per}</div>
             <button className="cta-btn" onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#4f46e5" : "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
@@ -240,7 +240,7 @@ function LandingSections({ onCta }) {
 
     {/* FINAL CTA */}
     <div style={{ textAlign: "center", padding: "40px 20px", margin: "16px 0 0", borderRadius: 16, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" }}>
-      <h2 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Prêt à trouver vos clients ?</h2>
+      <h2 style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Prêt à trouver vos clients ?</h2>
       <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 20, maxWidth: 400, margin: "0 auto 20px" }}>Choisissez un secteur, entrez une ville, et recevez vos premiers leads en 30 secondes.</p>
       <button className="cta-btn" onClick={onCta} style={{ padding: "14px 40px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer maintenant →</button>
     </div>
@@ -379,7 +379,7 @@ export default function App() {
         {/* HERO */}
         {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
           <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#4f46e5", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
-          <h1 className="hero-title" style={{ fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
+          <h1 className="hero-title" style={{ fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.15, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
           <p className="hero-sub" style={{ color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
           <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(79,70,229,.3)" }}>Essayer maintenant ↓</button>
         </div>)}
