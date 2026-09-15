@@ -136,9 +136,9 @@ function SearchForm({ industry, setIndustry, location, setLocation, target, setT
   return (
     <div style={S.sCard}>
       <div style={S.nGrid}>{NICHES.map(n => (
-        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(industry === n.i ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => { setIndustry(n.i); setTarget(n.t); }}>
+        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(selectedNiches.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => { setSelectedNiches(prev => { const next = prev.includes(n.i) ? prev.filter(x => x !== n.i) : [...prev, n.i]; setIndustry(next.map(ni => NICHES.find(nn => nn.i === ni)?.i).join(", ")); setTarget(next.map(ni => NICHES.find(nn => nn.i === ni)?.t).join(", ")); return next; }); }}>
           <span style={{ fontSize: 17 }}>{n.icon}</span>
-          <span style={{ fontSize: 11, fontWeight: 600, color: industry === n.i ? "#4f46e5" : "#475569" }}>{n.l}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: selectedNiches.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
         </button>))}</div>
       <div style={S.fRow}>
         <Input label="Secteur d'activité" value={industry} onChange={e => setIndustry(e.target.value)} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
@@ -254,6 +254,7 @@ export default function App() {
   const [progress, setProgress] = useState("");
   const [expandedId, setExpandedId] = useState(null);
   const [industry, setIndustry] = useState("");
+  const [selectedNiches, setSelectedNiches] = useState([]);
   const [location, setLocation] = useState("");
   const [target, setTarget] = useState("");
   const [count, setCount] = useState("10");
@@ -317,7 +318,7 @@ export default function App() {
 
       {/* NAV */}
       <div style={S.topBar}>
-        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); setError(null); setExpandedId(null); window.scrollTo(0,0); }}><Logo small /></button>
+        <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); setError(null); setExpandedId(null); setSelectedNiches([]); window.scrollTo(0,0); }}><Logo small /></button>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           {loggedIn ? (<>
             <button className="gb" style={{ ...S.creditBtn, ...(balance < 3 ? { borderColor: "#fecaca", background: "#fef2f2" } : {}) }} onClick={() => setModalStep("pay")}>
