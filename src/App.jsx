@@ -132,7 +132,7 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
 }
 
 /* ─── SEARCH FORM ─── */
-function SearchForm({ industry, setIndustry, location, setLocation, target, setTarget, count, setCount, onSearch, loading, progress, error, loggedIn, balance }) {
+function SearchForm({ industry, setIndustry, location, setLocation, target, setTarget, count, setCount, onSearch, loading, progress, error, loggedIn, balance, selectedNiches, setSelectedNiches }) {
   return (
     <div style={S.sCard}>
       <div style={S.nGrid}>{NICHES.map(n => (
@@ -360,7 +360,7 @@ export default function App() {
 
         {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Nouvelle recherche</h2></div>)}
 
-        <SearchForm industry={industry} setIndustry={setIndustry} location={location} setLocation={setLocation} target={target} setTarget={setTarget} count={count} setCount={setCount} onSearch={handleSearch} loading={loading} progress={progress} error={error} loggedIn={loggedIn} balance={balance} />
+        <SearchForm industry={industry} setIndustry={setIndustry} location={location} setLocation={setLocation} target={target} setTarget={setTarget} count={count} setCount={setCount} onSearch={handleSearch} loading={loading} progress={progress} error={error} loggedIn={loggedIn} balance={balance} selectedNiches={selectedNiches} setSelectedNiches={setSelectedNiches} />
 
         {loading && <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{[1, 2, 3].map(i => <div key={i} style={S.skel}><div style={{ ...S.skelL, width: "50%" }} /><div style={{ ...S.skelL, width: "30%", height: 10, marginTop: 6 }} /></div>)}</div>}
 
