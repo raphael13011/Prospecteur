@@ -120,7 +120,7 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
 function LandingSections({ onCta }) {
   return (<>
     {/* STATS BAR */}
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0", className: "stat-grid" }}>
       {[{ n: "30 sec", d: "Pour obtenir vos leads" }, { n: "12+", d: "Secteurs pré-configurés" }, { n: "0,12€", d: "Le lead le moins cher" }].map((s, i) => (
         <div key={i} className="stat-card" style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 12 }}>
           <div style={{ fontSize: 24, fontWeight: 800, color: "#4f46e5", letterSpacing: "-0.02em" }}>{s.n}</div>
@@ -133,9 +133,9 @@ function LandingSections({ onCta }) {
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>COMMENT ÇA MARCHE</div>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>3 étapes, 30 secondes</h2>
+        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>3 étapes, 30 secondes</h2>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+      <div className="step-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
         {[{ icon: "🎯", n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville. Ou tapez directement votre niche." },
           { icon: "🤖", n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel — sites, annuaires, LinkedIn — et identifie vos prospects." },
           { icon: "📋", n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site, dirigeant, score de pertinence. Exportez en CSV en 1 clic." }
@@ -156,7 +156,7 @@ function LandingSections({ onCta }) {
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>APERÇU</div>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Voici ce que vous obtenez</h2>
+        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Voici ce que vous obtenez</h2>
         <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Résultat réel pour "Plombiers à Lyon"</p>
       </div>
       <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,.04)" }}>
@@ -185,10 +185,10 @@ function LandingSections({ onCta }) {
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>TARIFS</div>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Payez à l'usage, sans engagement</h2>
+        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Payez à l'usage, sans engagement</h2>
         <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Pas d'abonnement. 1 crédit = 1 lead trouvé. Crédits valables à vie.</p>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, maxWidth: 580, margin: "0 auto" }}>
+      <div className="pack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, maxWidth: 580, margin: "0 auto" }}>
         {Object.entries(PACKS).map(([id, p]) => (
           <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #4f46e5" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#fafaff" : "#fff" }}>
             {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
@@ -204,7 +204,7 @@ function LandingSections({ onCta }) {
 
     {/* TRUST */}
     <div style={{ padding: "24px 0 32px" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+      <div className="trust-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
         {[{ icon: "🔒", t: "Paiement sécurisé", d: "Stripe, le leader mondial du paiement en ligne" },
           { icon: "🇫🇷", t: "100% français", d: "Interface, données et support en français" },
           { icon: "⚡", t: "Résultats instantanés", d: "L'IA cherche en temps réel, pas de base statique" },
@@ -222,7 +222,7 @@ function LandingSections({ onCta }) {
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
         <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>FAQ</div>
-        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Questions fréquentes</h2>
+        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Questions fréquentes</h2>
       </div>
       {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires professionnels, LinkedIn, pages légales. Ce ne sont pas des données statiques : chaque recherche est fraîche." },
         { q: "Est-ce que les contacts sont fiables ?", a: "Chaque lead a un score de pertinence. Les emails et téléphones sont extraits de sources publiques et vérifiés quand c'est possible. Le score vous permet de prioriser les meilleurs prospects." },
@@ -379,8 +379,8 @@ export default function App() {
         {/* HERO */}
         {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
           <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#4f46e5", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
-          <h1 style={{ fontSize: 42, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
-          <p style={{ fontSize: 17, color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
+          <h1 className="hero-title" style={{ fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
+          <p className="hero-sub" style={{ color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
           <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(79,70,229,.3)" }}>Essayer maintenant ↓</button>
         </div>)}
 
@@ -388,16 +388,16 @@ export default function App() {
 
         {/* SEARCH FORM */}
         <div ref={formRef} style={{ ...S.sCard, ...(showLanding ? { marginTop: 24, boxShadow: "0 4px 20px rgba(0,0,0,.06)" } : {}) }}>
-          <div style={S.nGrid}>{NICHES.map(n => (
+          <div className="niche-grid" style={S.nGrid}>{NICHES.map(n => (
             <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#4f46e5", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
               <span style={{ fontSize: 17 }}>{n.icon}</span>
               <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
             </button>))}</div>
-          <div style={S.fRow}>
+          <div className="form-row" style={S.fRow}>
             <Input label="Secteur d'activité" value={industry} onChange={e => { setIndustry(e.target.value); setPicked([]); }} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
             <Input label="Ville / Région" value={location} onChange={e => setLocation(e.target.value)} placeholder="Ex : Marseille, Île-de-France…" />
           </div>
-          <div style={S.fRow}>
+          <div className="form-row" style={S.fRow}>
             <div style={{ flex: 2 }}><Input label="Cible (optionnel)" value={target} onChange={e => setTarget(e.target.value)} placeholder="Ex : Indépendants, +10 employés…" /></div>
             <div style={{ flex: 0, minWidth: 90 }}><label style={S.label}>Quantité</label><select style={S.input} value={count} onChange={e => setCount(e.target.value)}>{[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
           </div>
