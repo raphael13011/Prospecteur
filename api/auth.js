@@ -1,6 +1,6 @@
-const User = require("../../lib/models/user");
-const Credit = require("../../lib/models/credit");
-const { generateToken, handleCors } = require("../../lib/auth");
+const User = require("../lib/models/user");
+const Credit = require("../lib/models/credit");
+const { generateToken, handleCors } = require("../lib/auth");
 
 module.exports = async function handler(req, res) {
   if (handleCors(req, res)) return;
@@ -37,7 +37,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === "me" && req.method === "GET") {
-    const { requireAuth } = require("../../lib/auth");
+    const { requireAuth } = require("../lib/auth");
     const user = await requireAuth(req, res);
     if (!user) return;
     const balance = await Credit.getBalance(Number(user.id));
@@ -46,7 +46,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === "profile" && req.method === "PUT") {
-    const { requireAuth } = require("../../lib/auth");
+    const { requireAuth } = require("../lib/auth");
     const user = await requireAuth(req, res);
     if (!user) return;
     const { name, company } = req.body;
@@ -57,7 +57,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === "password" && req.method === "PUT") {
-    const { requireAuth } = require("../../lib/auth");
+    const { requireAuth } = require("../lib/auth");
     const user = await requireAuth(req, res);
     if (!user) return;
     const { current_password, new_password } = req.body;
@@ -71,7 +71,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === "forgot-password" && req.method === "POST") {
-    const PasswordReset = require("../../lib/models/passwordReset");
+    const PasswordReset = require("../lib/models/passwordReset");
     const { email } = req.body;
     if (email) {
       const user = await User.findByEmail(email);
@@ -85,7 +85,7 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === "reset-password" && req.method === "POST") {
-    const PasswordReset = require("../../lib/models/passwordReset");
+    const PasswordReset = require("../lib/models/passwordReset");
     const { token, password } = req.body;
     if (!token) return res.status(400).json({ error: "Token requis." });
     if (!password || password.length < 6) return res.status(400).json({ error: "6 caractères minimum." });
