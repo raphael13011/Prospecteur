@@ -32,6 +32,11 @@ const NICHES = [
   { icon: "🛒", l: "Commerce", i: "Commerces de proximité", t: "Boutiques, magasins spécialisés" },
   { icon: "🌿", l: "Paysage", i: "Paysagistes", t: "Paysagistes, jardiniers" },
 ];
+const FAKE_LEADS = [
+  { company: "Plomberie Martin & Fils", location: "Lyon 3e", score: 92, email: true, phone: true },
+  { company: "Atelier Duval Rénovation", location: "Villeurbanne", score: 87, email: true, phone: false },
+  { company: "SOS Dépannage Express", location: "Lyon 7e", score: 84, email: true, phone: true },
+];
 
 function Input({ label, error, ...p }) {
   return (<div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
@@ -47,9 +52,8 @@ function Logo({ small }) {
   </div>);
 }
 
-/* ─── STEP MODAL: handles auth → payment flow ─── */
+/* ─── STEP MODAL ─── */
 function StepModal({ step, onAuth, onPaid, onClose, count }) {
-  // step: "auth" | "pay"
   const [mode, setMode] = useState("signup");
   const [email, setEmail] = useState(""); const [pw, setPw] = useState("");
   const [name, setName] = useState(""); const [company, setCompany] = useState("");
@@ -67,89 +71,166 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
     setLd(false);
   };
   const onK = e => { if (e.key === "Enter") doAuth(); };
-
-  const buy = async (packId, token) => {
+  const buy = async (packId, tkn) => {
     setBuying(packId);
-    try {
-      const d = await api("/billing?action=checkout", { method: "POST", body: { pack: packId }, token });
-      if (d.checkout_url) window.location.href = d.checkout_url;
-    } catch (e) { alert(e.message); }
+    try { const d = await api("/billing?action=checkout", { method: "POST", body: { pack: packId }, token: tkn }); if (d.checkout_url) window.location.href = d.checkout_url; } catch (e) { alert(e.message); }
     setBuying(null);
   };
 
   return (
-    <div style={S.overlay} onClick={onClose}>
-      <div style={S.modal} onClick={e => e.stopPropagation()}>
-        <button style={S.closeBtn} onClick={onClose}>✕</button>
-
-        {/* STEP INDICATOR */}
-        <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span>
-          </div>
-          <div style={{ width: 24, height: 1, background: "#e5e7eb", alignSelf: "center" }} />
-          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div>
-            <span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span>
-          </div>
+    <div style={S.overlay} onClick={onClose}><div style={S.modal} onClick={e => e.stopPropagation()}>
+      <button style={S.closeBtn} onClick={onClose}>✕</button>
+      <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div>
+          <span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span>
         </div>
-
-        {step === "auth" && (
-          <>
-            <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>
-              {mode === "signup" ? "Créez votre compte" : "Connexion"}
-            </h2>
-            <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>
-              {mode === "signup" ? "Pour recevoir vos " + count + " prospects" : "Retrouvez votre compte"}
-            </p>
-            {err && <div style={S.errBox}>{err}</div>}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {mode === "signup" && (
-                <div style={{ display: "flex", gap: 10 }}>
-                  <Input label="Nom" value={name} onChange={e => setName(e.target.value)} placeholder="Jean Dupont" onKeyDown={onK} />
-                  <Input label="Entreprise" value={company} onChange={e => setCompany(e.target.value)} placeholder="Optionnel" onKeyDown={onK} />
-                </div>
-              )}
-              <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jean@exemple.fr" onKeyDown={onK} />
-              <Input label="Mot de passe" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="6 caractères min." onKeyDown={onK} />
-            </div>
-            <button style={{ ...S.pBtn, marginTop: 16, ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>
-              {ld ? <span style={S.spn} /> : mode === "signup" ? "Continuer →" : "Se connecter →"}
-            </button>
-            <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#64748b" }}>
-              {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> :
-                <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
-            </div>
-          </>
-        )}
-
-        {step === "pay" && (
-          <>
-            <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>Choisissez vos crédits</h2>
-            <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>
-              1 crédit = 1 lead trouvé · Vos {count} prospects vous attendent
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {Object.entries(PACKS).map(([id, p]) => (
-                <button key={id} className="gb" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #6366f1", background: "#fafaff" } : {}) }} onClick={() => buy(id, onPaid)}>
-                  {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 8px", borderRadius: 10 }}>Populaire</span>}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: 15 }}>{p.credits} crédits</div>
-                      <div style={{ fontSize: 12, color: "#94a3b8" }}>{p.per}</div>
-                    </div>
-                    <div style={{ fontSize: 20, fontWeight: 800 }}>{p.price}</div>
-                  </div>
-                  {buying === id && <span style={{ ...S.spn, borderColor: "rgba(0,0,0,.2)", borderTopColor: "#0f172a", marginLeft: 8 }} />}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+        <div style={{ width: 24, height: 1, background: "#e5e7eb", alignSelf: "center" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div>
+          <span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span>
+        </div>
       </div>
+      {step === "auth" && (<>
+        <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>{mode === "signup" ? "Créez votre compte" : "Connexion"}</h2>
+        <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>{mode === "signup" ? "Pour recevoir vos " + count + " prospects" : "Retrouvez votre compte"}</p>
+        {err && <div style={S.errBox}>{err}</div>}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {mode === "signup" && <div style={{ display: "flex", gap: 10 }}><Input label="Nom" value={name} onChange={e => setName(e.target.value)} placeholder="Jean Dupont" onKeyDown={onK} /><Input label="Entreprise" value={company} onChange={e => setCompany(e.target.value)} placeholder="Optionnel" onKeyDown={onK} /></div>}
+          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jean@exemple.fr" onKeyDown={onK} />
+          <Input label="Mot de passe" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="6 caractères min." onKeyDown={onK} />
+        </div>
+        <button style={{ ...S.pBtn, marginTop: 16, ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
+        <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#64748b" }}>
+          {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> :
+            <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
+        </div>
+      </>)}
+      {step === "pay" && (<>
+        <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>Choisissez vos crédits</h2>
+        <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>1 crédit = 1 lead · Paiement sécurisé par Stripe</p>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          {Object.entries(PACKS).map(([id, p]) => (
+            <button key={id} className="gb" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #6366f1", background: "#fafaff" } : {}) }} onClick={() => buy(id, onPaid)}>
+              {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 8px", borderRadius: 10 }}>Populaire</span>}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                <div><div style={{ fontWeight: 700, fontSize: 15 }}>{p.credits} crédits</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{p.per}</div></div>
+                <div style={{ fontSize: 20, fontWeight: 800 }}>{p.price}</div>
+              </div>
+            </button>
+          ))}
+        </div>
+      </>)}
+    </div></div>
+  );
+}
+
+/* ─── SEARCH FORM ─── */
+function SearchForm({ industry, setIndustry, location, setLocation, target, setTarget, count, setCount, onSearch, loading, progress, error, loggedIn, balance }) {
+  return (
+    <div style={S.sCard}>
+      <div style={S.nGrid}>{NICHES.map(n => (
+        <button key={n.l} className="nb" style={{ ...S.nBtn, ...(industry === n.i ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => { setIndustry(n.i); setTarget(n.t); }}>
+          <span style={{ fontSize: 17 }}>{n.icon}</span>
+          <span style={{ fontSize: 11, fontWeight: 600, color: industry === n.i ? "#4f46e5" : "#475569" }}>{n.l}</span>
+        </button>))}</div>
+      <div style={S.fRow}>
+        <Input label="Secteur d'activité" value={industry} onChange={e => setIndustry(e.target.value)} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
+        <Input label="Ville / Région" value={location} onChange={e => setLocation(e.target.value)} placeholder="Ex : Marseille, Île-de-France…" />
+      </div>
+      <div style={S.fRow}>
+        <div style={{ flex: 2 }}><Input label="Cible (optionnel)" value={target} onChange={e => setTarget(e.target.value)} placeholder="Ex : Indépendants, +10 employés…" /></div>
+        <div style={{ flex: 0, minWidth: 90 }}><label style={S.label}>Quantité</label><select style={S.input} value={count} onChange={e => setCount(e.target.value)}>{[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
+      </div>
+      {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
+      {error && <div style={S.errBox}>{error}</div>}
+      <button style={{ ...S.pBtn, marginTop: 10, ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={onSearch}>
+        {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
+      </button>
     </div>
   );
+}
+
+/* ─── LANDING SECTIONS ─── */
+function LandingSections() {
+  return (<>
+    {/* HOW IT WORKS */}
+    <div style={{ padding: "48px 0 32px" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 32, letterSpacing: "-0.02em" }}>Comment ça marche</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
+        {[
+          { n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un secteur et une ville. Plus de 12 niches pré-configurées pour démarrer en 1 clic." },
+          { n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel et identifie des entreprises correspondant à vos critères." },
+          { n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site web, dirigeant — tout est prêt. Exportez en CSV en 1 clic." },
+        ].map(s => (
+          <div key={s.n} style={{ textAlign: "center", padding: "0 8px" }}>
+            <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, margin: "0 auto 12px" }}>{s.n}</div>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{s.title}</div>
+            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* PREVIEW */}
+    <div style={{ padding: "24px 0 32px" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8, letterSpacing: "-0.02em" }}>Ce que vous obtenez</h2>
+      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>Exemple : recherche "Plombiers à Lyon"</p>
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden" }}>
+        {FAKE_LEADS.map((l, i) => (
+          <div key={i} style={{ padding: "14px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 14 }}>{l.company}</div>
+              <div style={{ fontSize: 12, color: "#94a3b8" }}>{l.location}</div>
+            </div>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              {l.email && <span style={S.chOk}>✉️</span>}
+              {l.phone && <span style={S.chOk}>📞</span>}
+              <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.score}%</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* PRICING */}
+    <div style={{ padding: "24px 0 32px" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8, letterSpacing: "-0.02em" }}>Tarifs simples, sans engagement</h2>
+      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>Payez uniquement ce que vous utilisez. 1 crédit = 1 lead.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, maxWidth: 540, margin: "0 auto" }}>
+        {Object.entries(PACKS).map(([id, p]) => (
+          <div key={id} style={{ ...S.card, ...(p.popular ? { border: "2px solid #6366f1" } : {}), textAlign: "center", position: "relative", padding: "24px 16px" }}>
+            {p.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 12px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + populaire</div>}
+            <div style={{ fontSize: 32, fontWeight: 800, letterSpacing: "-0.02em" }}>{p.price}</div>
+            <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>{p.credits} crédits</div>
+            <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{p.per}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* FAQ */}
+    <div style={{ padding: "24px 0 40px" }}>
+      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 20, letterSpacing: "-0.02em" }}>Questions fréquentes</h2>
+      {[
+        { q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires, LinkedIn, pages légales. Aucune base de données statique." },
+        { q: "Est-ce que les contacts sont fiables ?", a: "Chaque lead a un score de pertinence. Les emails et téléphones sont extraits de sources publiques et vérifiés quand c'est possible." },
+        { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie, sans limite de temps." },
+        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic. Compatible avec tous les CRM et tableurs." },
+        { q: "Est-ce conforme au RGPD ?", a: "Les données sont issues de sources publiques. Aucune donnée personnelle n'est stockée au-delà de votre compte." },
+      ].map(f => (
+        <div key={f.q} style={{ borderBottom: "1px solid #f1f5f9", padding: "14px 0" }}>
+          <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{f.q}</div>
+          <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{f.a}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* FOOTER */}
+    <div style={{ textAlign: "center", padding: "24px 0 16px", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 12, color: "#94a3b8" }}>Prospecteur · Paiement sécurisé par Stripe · contact@prospecteur.fr</p>
+    </div>
+  </>);
 }
 
 /* ─── MAIN APP ─── */
@@ -158,7 +239,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(0);
   const [ready, setReady] = useState(false);
-  const [modalStep, setModalStep] = useState(null); // null | "auth" | "pay"
+  const [modalStep, setModalStep] = useState(null);
   const [view, setView] = useState("search");
   const [results, setResults] = useState(null);
   const [history, setHistory] = useState([]);
@@ -171,38 +252,23 @@ export default function App() {
   const [target, setTarget] = useState("");
   const [count, setCount] = useState("10");
   const [toast, setToast] = useState(null);
-  const ref = useRef(null);
+  const resRef = useRef(null);
   const flash = m => { setToast(m); setTimeout(() => setToast(null), 2500); };
   const loggedIn = !!token;
 
   useEffect(() => {
     (async () => {
       const t = loadToken();
-      if (t) {
-        try {
-          const d = await api("/auth?action=me", { token: t });
-          setToken(t); setUser(d.user); setBalance(d.balance);
-          try { const h = await api("/leads?action=history", { token: t }); setHistory(h.searches || []); } catch {}
-        } catch { clearToken(); }
-      }
+      if (t) { try { const d = await api("/auth?action=me", { token: t }); setToken(t); setUser(d.user); setBalance(d.balance);
+        try { const h = await api("/leads?action=history", { token: t }); setHistory(h.searches || []); } catch {} } catch { clearToken(); } }
       setReady(true);
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("status") === "success") { window.history.replaceState({}, "", "/");
+        setTimeout(() => { const t2 = loadToken(); if (t2) api("/auth?action=me", { token: t2 }).then(d => { setBalance(d.balance); flash("Crédits ajoutés !"); }).catch(() => {}); }, 1000); }
     })();
-    // Check if returning from Stripe
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("status") === "success") {
-      window.history.replaceState({}, "", "/");
-      setTimeout(() => {
-        const t = loadToken();
-        if (t) api("/auth?action=me", { token: t }).then(d => { setBalance(d.balance); flash("Crédits ajoutés !"); }).catch(() => {});
-      }, 1000);
-    }
   }, []);
 
-  const onAuth = (t, u, b) => {
-    setToken(t); setUser(u); setBalance(b);
-    if (b < 1) { setModalStep("pay"); } // No credits → show payment
-    else { setModalStep(null); doSearch(t); } // Has credits → search
-  };
+  const onAuth = (t, u, b) => { setToken(t); setUser(u); setBalance(b); b < 1 ? setModalStep("pay") : (() => { setModalStep(null); doSearch(t); })(); };
   const logout = () => { clearToken(); setToken(null); setUser(null); setBalance(0); setResults(null); setHistory([]); };
 
   const handleSearch = () => {
@@ -223,26 +289,27 @@ export default function App() {
       setResults({ leads: d.leads, meta: d.meta }); setBalance(d.balance);
       try { const h = await api("/leads?action=history", { token: t }); setHistory(h.searches || []); } catch {}
       flash(d.leads.length + " prospect" + (d.leads.length > 1 ? "s" : "") + " trouvé" + (d.leads.length > 1 ? "s" : ""));
-      setTimeout(() => ref.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
-    } catch (e) { setError(e.message); }
-    finally { clearInterval(iv); setLoading(false); setProgress(""); }
+      setTimeout(() => resRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
+    } catch (e) { setError(e.message); } finally { clearInterval(iv); setLoading(false); setProgress(""); }
   };
 
   const exportCSV = async () => {
-    try { const res = await fetch("/api/leads?action=export", { headers: { Authorization: "Bearer " + token } });
-      const b = await res.blob(); const a = document.createElement("a"); a.href = URL.createObjectURL(b);
+    try { const r = await fetch("/api/leads?action=export", { headers: { Authorization: "Bearer " + token } });
+      const b = await r.blob(); const a = document.createElement("a"); a.href = URL.createObjectURL(b);
       a.download = "leads-" + new Date().toISOString().slice(0, 10) + ".csv"; a.click(); flash("CSV téléchargé");
-    } catch { flash("Erreur d'export"); }
+    } catch { flash("Erreur"); }
   };
 
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
+
+  const showLanding = !loggedIn && !results && !loading;
 
   return (
     <div style={S.root}>
       {toast && <div style={S.toast}>{toast}</div>}
       {modalStep && <StepModal step={modalStep} count={count} onAuth={onAuth} onPaid={token} onClose={() => setModalStep(null)} />}
 
-      {/* HEADER */}
+      {/* NAV */}
       <div style={S.topBar}>
         <button style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }} onClick={() => { setView("search"); setResults(null); }}><Logo small /></button>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -255,7 +322,7 @@ export default function App() {
             {view !== "search" && <button className="gb" style={S.gBtnS} onClick={() => setView("search")}>← Recherche</button>}
             <button style={S.avBtn} onClick={() => view === "account" ? setView("search") : setView("account")}>{(user?.name || "U")[0].toUpperCase()}</button>
           </>) : (
-            <button className="gb" style={S.gBtn} onClick={() => setModalStep("auth")}>Connexion</button>
+            <button className="gb" style={{ ...S.gBtn, fontWeight: 700 }} onClick={() => setModalStep("auth")}>Connexion</button>
           )}
         </div>
       </div>
@@ -263,67 +330,34 @@ export default function App() {
       {/* ACCOUNT */}
       {view === "account" && (<div>
         <button style={S.bkBtn} onClick={() => setView("search")}>← Retour</button>
-        <div style={S.card}>
-          <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}>
-            <div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div>
-            <div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 10 }}>
-            <div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{balance}</div><div style={{ fontSize: 12, color: "#64748b" }}>crédits</div></div>
-            <div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{history.length}</div><div style={{ fontSize: 12, color: "#64748b" }}>recherches</div></div>
-          </div>
+        <div style={S.card}><div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}><div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div><div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div></div>
+          <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{balance}</div><div style={{ fontSize: 12, color: "#64748b" }}>crédits</div></div><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{history.length}</div><div style={{ fontSize: 12, color: "#64748b" }}>recherches</div></div></div>
         </div>
         <button style={{ ...S.pBtn, marginBottom: 10 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
         <button className="gb" style={{ ...S.gBtn, color: "#94a3b8" }} onClick={logout}>Se déconnecter</button>
       </div>)}
 
       {/* HISTORY */}
-      {view === "history" && (<div>
-        <h2 style={S.secT}>Historique</h2>
-        {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setView("search"); }}>
-          <div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div>
-          <span style={{ color: "#6366f1", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
-        </div>))}
+      {view === "history" && (<div><h2 style={S.secT}>Historique</h2>
+        {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setView("search"); }}><div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div><span style={{ color: "#6366f1", fontSize: 13, fontWeight: 600 }}>Relancer →</span></div>))}
       </div>)}
 
-      {/* SEARCH */}
+      {/* SEARCH VIEW */}
       {view === "search" && (<>
-        {!results && !loading && (<div style={{ textAlign: "center", padding: "24px 0 8px" }}>
-          <h1 style={{ fontSize: 30, fontWeight: 800, letterSpacing: "-0.035em", lineHeight: 1.15, color: "#0f172a", marginBottom: 8 }}>Trouvez vos prochains clients</h1>
-          <p style={{ fontSize: 15, color: "#64748b", maxWidth: 440, margin: "0 auto 20px", lineHeight: 1.5 }}>Choisissez un secteur et une ville. L'IA trouve des entreprises réelles avec leurs coordonnées.</p>
+        {/* HERO */}
+        {showLanding && (<div style={{ textAlign: "center", padding: "40px 0 4px" }}>
+          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "#eef2ff", fontSize: 13, fontWeight: 600, color: "#6366f1", marginBottom: 16 }}>Prospection IA pour les entreprises françaises</div>
+          <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.1, color: "#0f172a", marginBottom: 12 }}>Vos prochains clients<br />sont à un clic</h1>
+          <p style={{ fontSize: 16, color: "#64748b", maxWidth: 460, margin: "0 auto 24px", lineHeight: 1.6 }}>Choisissez un secteur, une ville, et recevez une liste de prospects qualifiés avec email, téléphone et contact clé.</p>
         </div>)}
 
-        <div style={S.sCard}>
-          <div style={S.nGrid}>{NICHES.map(n => (
-            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(industry === n.i ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => { setIndustry(n.i); setTarget(n.t); }}>
-              <span style={{ fontSize: 17 }}>{n.icon}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: industry === n.i ? "#4f46e5" : "#475569" }}>{n.l}</span>
-            </button>))}</div>
-          <div style={S.fRow}>
-            <Input label="Secteur d'activité" value={industry} onChange={e => setIndustry(e.target.value)} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
-            <Input label="Ville / Région" value={location} onChange={e => setLocation(e.target.value)} placeholder="Ex : Marseille, Île-de-France…" />
-          </div>
-          <div style={S.fRow}>
-            <div style={{ flex: 2 }}><Input label="Cible (optionnel)" value={target} onChange={e => setTarget(e.target.value)} placeholder="Ex : Indépendants, +10 employés…" /></div>
-            <div style={{ flex: 0, minWidth: 90 }}><label style={S.label}>Quantité</label><select style={S.input} value={count} onChange={e => setCount(e.target.value)}>{[5, 10, 15, 20].map(n => <option key={n} value={n}>{n}</option>)}</select></div>
-          </div>
-          {error && <div style={S.errBox}>{error}</div>}
-          <button style={{ ...S.pBtn, marginTop: 10, ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
-            {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
-          </button>
-        </div>
+        {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a" }}>Nouvelle recherche</h2></div>)}
 
-        {!results && !loading && !loggedIn && (
-          <div style={{ display: "flex", justifyContent: "center", gap: 16, flexWrap: "wrap", margin: "16px 0", opacity: .8 }}>
-            {["Données vérifiées", "100 % français", "Export CSV", "Paiement sécurisé"].map(t => (
-              <span key={t} style={{ fontSize: 12, color: "#64748b" }}>✓ {t}</span>
-            ))}
-          </div>
-        )}
+        <SearchForm industry={industry} setIndustry={setIndustry} location={location} setLocation={setLocation} target={target} setTarget={setTarget} count={count} setCount={setCount} onSearch={handleSearch} loading={loading} progress={progress} error={error} loggedIn={loggedIn} balance={balance} />
 
         {loading && <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{[1, 2, 3].map(i => <div key={i} style={S.skel}><div style={{ ...S.skelL, width: "50%" }} /><div style={{ ...S.skelL, width: "30%", height: 10, marginTop: 6 }} /></div>)}</div>}
 
-        {results && (<div ref={ref}>
+        {results && (<div ref={resRef}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", margin: "20px 0 10px", flexWrap: "wrap", gap: 12 }}>
             <div><h2 style={S.secT}>{results.meta.count} prospect{results.meta.count > 1 ? "s" : ""}</h2><p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>{results.meta.industry} · {results.meta.location}</p></div>
             <button className="gb" style={S.gBtn} onClick={exportCSV}>↓ Exporter CSV</button>
@@ -339,32 +373,28 @@ export default function App() {
                 {l.size && <span style={S.ch}>👥 {l.size}</span>}
                 {l.website && <a href={l.website} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>🌐 Site</a>}
                 {l.linkedin && <a href={l.linkedin} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>💼 LinkedIn</a>}
-                {l.email && <span style={S.chOk}>✉️ Email</span>}
-                {l.phone && <span style={S.chOk}>📞 Tél.</span>}
+                {l.email && <span style={S.chOk}>✉️ Email</span>}{l.phone && <span style={S.chOk}>📞 Tél.</span>}
               </div>
-              {expandedId === i && (<div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9", animation: "slideUp .2s ease" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 18px" }}>
-                  {l.contact_name && <div><div style={S.dl}>Contact</div><div style={S.dv}>{l.contact_name}{l.contact_role ? " — " + l.contact_role : ""}</div></div>}
-                  {l.email && <div><div style={S.dl}>Email</div><a href={"mailto:" + l.email} style={S.da}>{l.email}</a></div>}
-                  {l.phone && <div><div style={S.dl}>Téléphone</div><a href={"tel:" + l.phone} style={S.da}>{l.phone}</a></div>}
-                  {l.website && <div><div style={S.dl}>Site</div><a href={l.website} target="_blank" rel="noopener noreferrer" style={S.da}>{l.website}</a></div>}
-                  {l.reason && <div style={{ gridColumn: "1/-1" }}><div style={S.dl}>Pertinence</div><div style={S.dv}>{l.reason}</div></div>}
-                </div>
-              </div>)}
+              {expandedId === i && (<div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid #f1f5f9", animation: "slideUp .2s ease" }}><div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 18px" }}>
+                {l.contact_name && <div><div style={S.dl}>Contact</div><div style={S.dv}>{l.contact_name}{l.contact_role ? " — " + l.contact_role : ""}</div></div>}
+                {l.email && <div><div style={S.dl}>Email</div><a href={"mailto:" + l.email} style={S.da}>{l.email}</a></div>}
+                {l.phone && <div><div style={S.dl}>Téléphone</div><a href={"tel:" + l.phone} style={S.da}>{l.phone}</a></div>}
+                {l.website && <div><div style={S.dl}>Site</div><a href={l.website} target="_blank" rel="noopener noreferrer" style={S.da}>{l.website}</a></div>}
+                {l.reason && <div style={{ gridColumn: "1/-1" }}><div style={S.dl}>Pertinence</div><div style={S.dv}>{l.reason}</div></div>}
+              </div></div>)}
             </div>))}
-          {balance < 5 && (<div style={S.ups}>
-            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div>
-            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer à trouver des prospects.</div>
-            <button style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
-          </div>)}
+          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
+
+        {/* LANDING SECTIONS (below search form, only for visitors) */}
+        {showLanding && <LandingSections />}
       </>)}
     </div>
   );
 }
 
 const S = {
-  root: { maxWidth: 800, margin: "0 auto", padding: "0 16px 48px" },
+  root: { maxWidth: 800, margin: "0 auto", padding: "0 16px 0" },
   ctr: { display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 },
   spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#6366f1", borderRadius: "50%", animation: "spin .7s linear infinite" },
   spn: { display: "inline-block", width: 15, height: 15, border: "2.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .6s linear infinite", marginRight: 8 },
