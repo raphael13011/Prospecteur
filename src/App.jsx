@@ -46,9 +46,15 @@ function Input({ label, error, ...p }) {
 }
 function Logo({ small }) {
   const z = small ? 28 : 36;
+  const c = z / 2;
   return (<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-    <div style={{ width: z, height: z, borderRadius: 8, background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: small ? 13 : 16 }}>P</div>
-    <span style={{ fontSize: small ? 16 : 20, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Huntly</span>
+    <svg width={z} height={z} viewBox={"0 0 "+z+" "+z} style={{ flexShrink: 0 }}>
+      <rect width={z} height={z} rx="8" fill="#4f46e5"/>
+      <circle cx={c} cy={c} r={z*0.31} fill="none" stroke="white" strokeWidth="2"/>
+      <circle cx={c} cy={c} r={z*0.15} fill="none" stroke="white" strokeWidth="2"/>
+      <circle cx={c} cy={c} r={z*0.055} fill="white"/>
+    </svg>
+    <span style={{ fontSize: small ? 16 : 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Huntly</span>
   </div>);
 }
 
