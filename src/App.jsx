@@ -14,9 +14,9 @@ const loadToken = () => localStorage.getItem("pt");
 const clearToken = () => localStorage.removeItem("pt");
 
 const PACKS = {
-  starter: { credits: 50, price: "9€", per: "0,18€/lead" },
-  pro: { credits: 200, price: "29€", per: "0,15€/lead", popular: true },
-  business: { credits: 500, price: "59€", per: "0,12€/lead" },
+  starter: { credits: 50, price: "9€", per: "0,18€/lead", desc: "Pour tester" },
+  pro: { credits: 200, price: "29€", per: "0,15€/lead", popular: true, desc: "Le plus choisi" },
+  business: { credits: 500, price: "59€", per: "0,12€/lead", desc: "Pour les pros" },
 };
 const NICHES = [
   { icon: "🔧", l: "Artisans", i: "Artisans du bâtiment", t: "Artisans indépendants et PME du BTP" },
@@ -31,11 +31,6 @@ const NICHES = [
   { icon: "🚗", l: "Auto", i: "Garages automobiles", t: "Garages indépendants" },
   { icon: "🛒", l: "Commerce", i: "Commerces de proximité", t: "Boutiques, magasins spécialisés" },
   { icon: "🌿", l: "Paysage", i: "Paysagistes", t: "Paysagistes, jardiniers" },
-];
-const FAKE_LEADS = [
-  { company: "Plomberie Martin & Fils", location: "Lyon 3e", score: 92, email: true, phone: true },
-  { company: "Atelier Duval Rénovation", location: "Villeurbanne", score: 87, email: true, phone: false },
-  { company: "SOS Dépannage Express", location: "Lyon 7e", score: 84, email: true, phone: true },
 ];
 
 function Input({ label, error, ...p }) {
@@ -85,9 +80,9 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
     <div style={S.overlay} onClick={onClose}><div style={S.modal} onClick={e => e.stopPropagation()}>
       <button style={S.closeBtn} onClick={onClose}>✕</button>
       <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#4f46e5" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#4f46e5" : "#059669" }}>Compte</span></div>
         <div style={{ width: 24, height: 1, background: "#e5e7eb", alignSelf: "center" }} />
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#4f46e5" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#4f46e5" : "#94a3b8" }}>Crédits</span></div>
       </div>
       {step === "auth" && (<>
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>{mode === "signup" ? "Créez votre compte" : "Connexion"}</h2>
@@ -98,21 +93,21 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
           <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jean@exemple.fr" onKeyDown={onK} />
           <Input label="Mot de passe" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="6 caractères min." onKeyDown={onK} />
         </div>
-        <button style={{ ...S.pBtn, marginTop: 16, ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
+        <button className="cta-btn" style={{ ...S.pBtn, marginTop: 16, background: "#4f46e5", ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
         <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#64748b" }}>
           {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> : <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
         </div>
       </>)}
       {step === "pay" && (<>
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>Choisissez vos crédits</h2>
-        <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>1 crédit = 1 lead · Paiement sécurisé par Stripe</p>
+        <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>1 crédit = 1 lead · Paiement sécurisé Stripe</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {Object.entries(PACKS).map(([id, p]) => (
-            <button key={id} className="gb" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #6366f1", background: "#fafaff" } : {}) }} onClick={() => buy(id, onPaid)}>
-              {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 8px", borderRadius: 10 }}>Populaire</span>}
+            <button key={id} className="pack-card" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #4f46e5", background: "#fafaff" } : {}) }} onClick={() => buy(id, onPaid)}>
+              {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "2px 10px", borderRadius: 10 }}>Populaire</span>}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                 <div><div style={{ fontWeight: 700, fontSize: 15 }}>{p.credits} crédits</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{p.per}</div></div>
-                <div style={{ fontSize: 20, fontWeight: 800 }}>{p.price}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#4f46e5" }}>{p.price}</div>
               </div>
             </button>
           ))}
@@ -122,56 +117,139 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
   );
 }
 
-function LandingSections() {
+function LandingSections({ onCta }) {
   return (<>
-    <div style={{ padding: "48px 0 32px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 32, letterSpacing: "-0.02em" }}>Comment ça marche</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20 }}>
-        {[{ n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville." },
-          { n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel et identifie des entreprises." },
-          { n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site web, dirigeant — exportez en CSV." }
-        ].map(s => (<div key={s.n} style={{ textAlign: "center", padding: "0 8px" }}>
-          <div style={{ width: 40, height: 40, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, margin: "0 auto 12px" }}>{s.n}</div>
-          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>{s.title}</div>
-          <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{s.desc}</div>
-        </div>))}
+    {/* STATS BAR */}
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0" }}>
+      {[{ n: "30 sec", d: "Pour obtenir vos leads" }, { n: "12+", d: "Secteurs pré-configurés" }, { n: "0,12€", d: "Le lead le moins cher" }].map((s, i) => (
+        <div key={i} className="stat-card" style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 12 }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: "#4f46e5", letterSpacing: "-0.02em" }}>{s.n}</div>
+          <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{s.d}</div>
+        </div>
+      ))}
+    </div>
+
+    {/* HOW IT WORKS */}
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>COMMENT ÇA MARCHE</div>
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>3 étapes, 30 secondes</h2>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
+        {[{ icon: "🎯", n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville. Ou tapez directement votre niche." },
+          { icon: "🤖", n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel — sites, annuaires, LinkedIn — et identifie vos prospects." },
+          { icon: "📋", n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site, dirigeant, score de pertinence. Exportez en CSV en 1 clic." }
+        ].map(s => (
+          <div key={s.n} className="step-card" style={{ padding: 24, borderRadius: 14, border: "1px solid #e5e7eb", transition: "all .2s" }}>
+            <div style={{ fontSize: 28, marginBottom: 12 }}>{s.icon}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#4f46e5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>{s.n}</div>
+              <div style={{ fontWeight: 700, fontSize: 15 }}>{s.title}</div>
+            </div>
+            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{s.desc}</div>
+          </div>
+        ))}
       </div>
     </div>
+
+    {/* PREVIEW */}
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>APERÇU</div>
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Voici ce que vous obtenez</h2>
+        <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Résultat réel pour "Plombiers à Lyon"</p>
+      </div>
+      <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,.04)" }}>
+        <div style={{ padding: "10px 18px", background: "#f8fafc", borderBottom: "1px solid #e5e7eb", fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>3 résultats · Plombiers · Lyon</div>
+        {[{ c: "Plomberie Martin & Fils", loc: "Lyon 3e", desc: "Entreprise familiale spécialisée en dépannage et rénovation plomberie depuis 2008.", sc: 92, em: true, ph: true, contact: "Pierre Martin — Gérant" },
+          { c: "Atelier Duval Rénovation", loc: "Villeurbanne", desc: "Plomberie, chauffage et climatisation pour particuliers et professionnels.", sc: 87, em: true, ph: false, contact: "Marc Duval — Dirigeant" },
+          { c: "SOS Dépannage Express", loc: "Lyon 7e", desc: "Interventions rapides en plomberie et serrurerie, 7j/7.", sc: 84, em: true, ph: true, contact: "Sarah Benali — Responsable" }
+        ].map((l, i) => (
+          <div key={i} style={{ padding: "16px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+              <div><div style={{ fontWeight: 700, fontSize: 14 }}>{l.c}</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{l.loc} · {l.contact}</div></div>
+              <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.sc}%</span>
+            </div>
+            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>{l.desc}</div>
+            <div style={{ display: "flex", gap: 6 }}>
+              {l.em && <span style={S.chOk}>✉️ Email dispo</span>}
+              {l.ph && <span style={S.chOk}>📞 Tél. dispo</span>}
+              <span style={S.ch}>🌐 Site web</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* PRICING */}
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>TARIFS</div>
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Payez à l'usage, sans engagement</h2>
+        <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Pas d'abonnement. 1 crédit = 1 lead trouvé. Crédits valables à vie.</p>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, maxWidth: 580, margin: "0 auto" }}>
+        {Object.entries(PACKS).map(([id, p]) => (
+          <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #4f46e5" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#fafaff" : "#fff" }}>
+            {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
+            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8 }}>{p.desc}</div>
+            <div style={{ fontSize: 36, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
+            <div style={{ fontSize: 16, fontWeight: 700, marginTop: 4 }}>{p.credits} crédits</div>
+            <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, marginBottom: 16 }}>{p.per}</div>
+            <button className="cta-btn" onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#4f46e5" : "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* TRUST */}
     <div style={{ padding: "24px 0 32px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>Ce que vous obtenez</h2>
-      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>Exemple : recherche "Plombiers à Lyon"</p>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden" }}>
-        {FAKE_LEADS.map((l, i) => (<div key={i} style={{ padding: "14px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div><div style={{ fontWeight: 700, fontSize: 14 }}>{l.company}</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{l.location}</div></div>
-          <div style={{ display: "flex", gap: 6, alignItems: "center" }}>{l.email && <span style={S.chOk}>✉️</span>}{l.phone && <span style={S.chOk}>📞</span>}<span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.score}%</span></div>
-        </div>))}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
+        {[{ icon: "🔒", t: "Paiement sécurisé", d: "Stripe, le leader mondial du paiement en ligne" },
+          { icon: "🇫🇷", t: "100% français", d: "Interface, données et support en français" },
+          { icon: "⚡", t: "Résultats instantanés", d: "L'IA cherche en temps réel, pas de base statique" },
+          { icon: "🛡️", t: "RGPD-friendly", d: "Données issues de sources publiques uniquement" }
+        ].map((t, i) => (
+          <div key={i} style={{ display: "flex", gap: 12, padding: "16px", borderRadius: 12, background: "#f8fafc" }}>
+            <div style={{ fontSize: 24, flexShrink: 0 }}>{t.icon}</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.t}</div><div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{t.d}</div></div>
+          </div>
+        ))}
       </div>
     </div>
-    <div style={{ padding: "24px 0 32px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>Tarifs simples, sans engagement</h2>
-      <p style={{ fontSize: 14, color: "#64748b", textAlign: "center", marginBottom: 20 }}>1 crédit = 1 lead trouvé.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, maxWidth: 540, margin: "0 auto" }}>
-        {Object.entries(PACKS).map(([id, p]) => (<div key={id} style={{ ...S.card, ...(p.popular ? { border: "2px solid #6366f1" } : {}), textAlign: "center", position: "relative", padding: "24px 16px" }}>
-          {p.popular && <div style={{ position: "absolute", top: -10, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#6366f1", background: "#eef2ff", padding: "2px 12px", borderRadius: 20 }}>Populaire</div>}
-          <div style={{ fontSize: 32, fontWeight: 800 }}>{p.price}</div>
-          <div style={{ fontSize: 15, fontWeight: 700, marginTop: 2 }}>{p.credits} crédits</div>
-          <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4 }}>{p.per}</div>
-        </div>))}
+
+    {/* FAQ */}
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>FAQ</div>
+        <h2 style={{ fontSize: 26, fontWeight: 800, letterSpacing: "-0.03em" }}>Questions fréquentes</h2>
       </div>
+      {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires professionnels, LinkedIn, pages légales. Ce ne sont pas des données statiques : chaque recherche est fraîche." },
+        { q: "Est-ce que les contacts sont fiables ?", a: "Chaque lead a un score de pertinence. Les emails et téléphones sont extraits de sources publiques et vérifiés quand c'est possible. Le score vous permet de prioriser les meilleurs prospects." },
+        { q: "Les crédits expirent-ils ?", a: "Non, jamais. Vos crédits sont valables à vie, sans date d'expiration ni renouvellement automatique." },
+        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic. Le fichier est compatible avec tous les CRM (HubSpot, Pipedrive, Salesforce) et tableurs (Excel, Google Sheets)." },
+        { q: "C'est conforme au RGPD ?", a: "Les données sont issues exclusivement de sources publiques (sites web, annuaires). Nous ne stockons aucune donnée personnelle au-delà de votre compte utilisateur." },
+        { q: "Combien de temps prend une recherche ?", a: "Entre 15 et 45 secondes selon le nombre de leads demandé. L'IA parcourt le web en temps réel, ce n'est pas une simple requête dans une base de données." }
+      ].map((f, i) => (
+        <div key={i} style={{ borderBottom: "1px solid #f1f5f9", padding: "16px 0" }}>
+          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "#0f172a" }}>{f.q}</div>
+          <div style={{ fontSize: 13.5, color: "#64748b", lineHeight: 1.6 }}>{f.a}</div>
+        </div>
+      ))}
     </div>
-    <div style={{ padding: "24px 0 40px" }}>
-      <h2 style={{ fontSize: 22, fontWeight: 800, textAlign: "center", marginBottom: 20 }}>Questions fréquentes</h2>
-      {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites, annuaires, LinkedIn, pages légales." },
-        { q: "Les contacts sont-ils fiables ?", a: "Chaque lead a un score. Les emails et téléphones viennent de sources publiques." },
-        { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie." },
-        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic." },
-      ].map(f => (<div key={f.q} style={{ borderBottom: "1px solid #f1f5f9", padding: "14px 0" }}>
-        <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 4 }}>{f.q}</div>
-        <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.5 }}>{f.a}</div>
-      </div>))}
+
+    {/* FINAL CTA */}
+    <div style={{ textAlign: "center", padding: "40px 20px", margin: "16px 0 0", borderRadius: 16, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" }}>
+      <h2 style={{ fontSize: 24, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Prêt à trouver vos clients ?</h2>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 20, maxWidth: 400, margin: "0 auto 20px" }}>Choisissez un secteur, entrez une ville, et recevez vos premiers leads en 30 secondes.</p>
+      <button className="cta-btn" onClick={onCta} style={{ padding: "14px 40px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer maintenant →</button>
     </div>
-    <div style={{ textAlign: "center", padding: "24px 0 16px", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 12, color: "#94a3b8" }}>Huntly · Paiement sécurisé par Stripe · hello@huntly.fr</p>
+
+    {/* FOOTER */}
+    <div style={{ textAlign: "center", padding: "32px 0 16px" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginBottom: 8 }}><Logo small /></div>
+      <p style={{ fontSize: 12, color: "#94a3b8" }}>Paiement sécurisé par Stripe · hello@huntly.fr</p>
+      <p style={{ fontSize: 11, color: "#cbd5e1", marginTop: 4 }}>© 2026 Huntly. Tous droits réservés.</p>
     </div>
   </>);
 }
@@ -196,6 +274,7 @@ export default function App() {
   const [picked, setPicked] = useState([]);
   const [toast, setToast] = useState(null);
   const resRef = useRef(null);
+  const formRef = useRef(null);
   const flash = m => { setToast(m); setTimeout(() => setToast(null), 2500); };
   const loggedIn = !!token;
 
@@ -212,12 +291,13 @@ export default function App() {
   }, []);
 
   const toggleNiche = (n) => {
-    const isOn = picked.includes(n.i);
-    const next = isOn ? picked.filter(x => x !== n.i) : [...picked, n.i];
+    const next = picked.includes(n.i) ? picked.filter(x => x !== n.i) : [...picked, n.i];
     setPicked(next);
     setIndustry(next.join(", "));
     setTarget(next.map(id => NICHES.find(nn => nn.i === id)).filter(Boolean).map(nn => nn.t).join(", "));
   };
+
+  const scrollToForm = () => { formRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); };
 
   const onAuth = (t, u, b) => { setToken(t); setUser(u); setBalance(b); b < 1 ? setModalStep("pay") : (() => { setModalStep(null); doSearch(t); })(); };
   const logout = () => { clearToken(); setToken(null); setUser(null); setBalance(0); setResults(null); setHistory([]); };
@@ -251,7 +331,7 @@ export default function App() {
     } catch { flash("Erreur"); }
   };
 
-  const goHome = () => { setView("search"); setResults(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); window.scrollTo(0, 0); };
+  const goHome = () => { setView("search"); setResults(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
 
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
 
@@ -284,29 +364,32 @@ export default function App() {
         <div style={S.card}><div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}><div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div><div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div></div>
           <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{balance}</div><div style={{ fontSize: 12, color: "#64748b" }}>crédits</div></div><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{history.length}</div><div style={{ fontSize: 12, color: "#64748b" }}>recherches</div></div></div>
         </div>
-        <button style={{ ...S.pBtn, marginBottom: 10 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
+        <button className="cta-btn" style={{ ...S.pBtn, marginBottom: 10, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
         <button className="gb" style={{ ...S.gBtn, color: "#94a3b8" }} onClick={logout}>Se déconnecter</button>
       </div>)}
 
       {view === "history" && (<div><h2 style={S.secT}>Historique</h2>
         {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setPicked([]); setView("search"); }}>
           <div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div>
-          <span style={{ color: "#6366f1", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
+          <span style={{ color: "#4f46e5", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
         </div>))}
       </div>)}
 
       {view === "search" && (<>
-        {showLanding && (<div style={{ textAlign: "center", padding: "40px 0 4px" }}>
-          <div style={{ display: "inline-block", padding: "4px 14px", borderRadius: 20, background: "#eef2ff", fontSize: 13, fontWeight: 600, color: "#6366f1", marginBottom: 16 }}>Trouvez vos clients avec l'IA</div>
-          <h1 style={{ fontSize: 38, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.1, color: "#0f172a", marginBottom: 12 }}>Vos prochains clients<br />sont à un clic</h1>
-          <p style={{ fontSize: 16, color: "#64748b", maxWidth: 460, margin: "0 auto 24px", lineHeight: 1.6 }}>Choisissez un ou plusieurs secteurs, une ville, et recevez des prospects qualifiés avec email, téléphone et contact clé.</p>
+        {/* HERO */}
+        {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
+          <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#4f46e5", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
+          <h1 style={{ fontSize: 42, fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
+          <p style={{ fontSize: 17, color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
+          <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(79,70,229,.3)" }}>Essayer maintenant ↓</button>
         </div>)}
 
         {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800 }}>Nouvelle recherche</h2></div>)}
 
-        <div style={S.sCard}>
+        {/* SEARCH FORM */}
+        <div ref={formRef} style={{ ...S.sCard, ...(showLanding ? { marginTop: 24, boxShadow: "0 4px 20px rgba(0,0,0,.06)" } : {}) }}>
           <div style={S.nGrid}>{NICHES.map(n => (
-            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#6366f1", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
+            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#4f46e5", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
               <span style={{ fontSize: 17 }}>{n.icon}</span>
               <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
             </button>))}</div>
@@ -320,12 +403,12 @@ export default function App() {
           </div>
           {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
           {error && <div style={S.errBox}>{error}</div>}
-          <button style={{ ...S.pBtn, marginTop: 10, ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
+          <button className="cta-btn" style={{ ...S.pBtn, marginTop: 10, background: "#4f46e5", ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
             {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
           </button>
         </div>
 
-        {loading && <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>{[1, 2, 3].map(i => <div key={i} style={S.skel}><div style={{ ...S.skelL, width: "50%" }} /><div style={{ ...S.skelL, width: "30%", height: 10, marginTop: 6 }} /></div>)}</div>}
+        {loading && <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 8 }}>{[1, 2, 3].map(i => <div key={i} style={S.skel}><div style={{ ...S.skelL, width: "50%" }} /><div style={{ ...S.skelL, width: "30%", height: 10, marginTop: 6 }} /></div>)}</div>}
 
         {results && (<div ref={resRef}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", margin: "20px 0 10px", flexWrap: "wrap", gap: 12 }}>
@@ -353,10 +436,10 @@ export default function App() {
                 {l.reason && <div style={{ gridColumn: "1/-1" }}><div style={S.dl}>Pertinence</div><div style={S.dv}>{l.reason}</div></div>}
               </div></div>)}
             </div>))}
-          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14 }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
+          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
-        {showLanding && <LandingSections />}
+        {showLanding && <LandingSections onCta={scrollToForm} />}
       </>)}
     </div>
   );
@@ -365,26 +448,26 @@ export default function App() {
 const S = {
   root: { maxWidth: 800, margin: "0 auto", padding: "0 16px 0" },
   ctr: { display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 },
-  spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#6366f1", borderRadius: "50%", animation: "spin .7s linear infinite" },
+  spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#4f46e5", borderRadius: "50%", animation: "spin .7s linear infinite" },
   spn: { display: "inline-block", width: 15, height: 15, border: "2.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .6s linear infinite", marginRight: 8 },
   toast: { position: "fixed", top: 16, left: "50%", transform: "translateX(-50%)", background: "#0f172a", color: "#fff", padding: "10px 22px", borderRadius: 10, fontSize: 14, fontWeight: 600, zIndex: 999 },
-  overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 900, padding: 16, backdropFilter: "blur(4px)" },
-  modal: { background: "#fff", borderRadius: 16, padding: "28px 28px 24px", width: "100%", maxWidth: 420, position: "relative", animation: "slideUp .25s ease" },
+  overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 900, padding: 16, backdropFilter: "blur(6px)" },
+  modal: { background: "#fff", borderRadius: 16, padding: "28px", width: "100%", maxWidth: 420, position: "relative", animation: "slideUp .25s ease", boxShadow: "0 20px 40px rgba(0,0,0,.15)" },
   closeBtn: { position: "absolute", top: 12, right: 14, background: "none", border: "none", fontSize: 18, color: "#94a3b8", cursor: "pointer" },
-  pBtn: { width: "100%", padding: "12px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
+  pBtn: { width: "100%", padding: "12px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" },
   gBtn: { padding: "8px 14px", background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, fontSize: 13, fontWeight: 600, color: "#475569", cursor: "pointer" },
   gBtnS: { padding: "5px 12px", background: "#fff", border: "1px solid #e5e7eb", borderRadius: 7, fontSize: 12, fontWeight: 600, color: "#475569", cursor: "pointer" },
-  bkBtn: { background: "none", border: "none", color: "#6366f1", fontSize: 14, fontWeight: 600, cursor: "pointer", padding: "0 0 16px" },
-  tBtn: { background: "none", border: "none", color: "#6366f1", fontWeight: 600, cursor: "pointer", fontSize: 13, padding: 0, textDecoration: "underline" },
+  bkBtn: { background: "none", border: "none", color: "#4f46e5", fontSize: 14, fontWeight: 600, cursor: "pointer", padding: "0 0 16px" },
+  tBtn: { background: "none", border: "none", color: "#4f46e5", fontWeight: 600, cursor: "pointer", fontSize: 13, padding: 0, textDecoration: "underline" },
   errBox: { margin: "10px 0", padding: "10px 14px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, color: "#dc2626", fontSize: 13 },
   card: { border: "1px solid #e5e7eb", borderRadius: 12, padding: "18px 20px", marginBottom: 10 },
   label: { fontSize: 12.5, fontWeight: 600, color: "#374151", display: "block", marginBottom: 4 },
   input: { padding: "10px 13px", border: "1px solid #e5e7eb", borderRadius: 9, fontSize: 14, outline: "none", color: "#1e293b", width: "100%", boxSizing: "border-box" },
   topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0 16px", flexWrap: "wrap", gap: 10 },
   creditBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "#f8fafc", borderRadius: 8, padding: "2px 14px", lineHeight: 1.2, border: "1px solid #e5e7eb", cursor: "pointer" },
-  avBtn: { width: 34, height: 34, borderRadius: "50%", background: "#0f172a", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
-  av: { width: 48, height: 48, borderRadius: "50%", background: "#eef2ff", color: "#6366f1", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 },
-  sCard: { border: "1px solid #e5e7eb", borderRadius: 14, padding: "18px", marginBottom: 8 },
+  avBtn: { width: 34, height: 34, borderRadius: "50%", background: "#4f46e5", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
+  av: { width: 48, height: 48, borderRadius: "50%", background: "#eef2ff", color: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 },
+  sCard: { border: "1px solid #e5e7eb", borderRadius: 14, padding: "18px", marginBottom: 8, background: "#fff", transition: "box-shadow .2s" },
   nGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(72px, 1fr))", gap: 5, marginBottom: 14 },
   nBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "9px 4px", borderRadius: 9, border: "1px solid #e5e7eb", background: "#fff", cursor: "pointer", transition: "all .12s" },
   fRow: { display: "flex", gap: 10, marginBottom: 8, flexWrap: "wrap" },
@@ -399,6 +482,6 @@ const S = {
   dl: { fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: ".04em" },
   dv: { fontSize: 14, color: "#1e293b", lineHeight: 1.4 },
   da: { fontSize: 14, color: "#4f46e5", textDecoration: "none" },
-  ups: { border: "2px solid #6366f1", borderRadius: 14, padding: "24px", marginTop: 20, background: "#fafaff" },
-  packRow: { display: "flex", alignItems: "center", width: "100%", padding: "14px 16px", border: "1px solid #e5e7eb", borderRadius: 10, background: "#fff", cursor: "pointer", position: "relative", transition: "border .12s" },
+  ups: { border: "2px solid #4f46e5", borderRadius: 14, padding: "24px", marginTop: 20, background: "#fafaff" },
+  packRow: { display: "flex", alignItems: "center", width: "100%", padding: "14px 16px", border: "1px solid #e5e7eb", borderRadius: 10, background: "#fff", cursor: "pointer", position: "relative", transition: "all .15s" },
 };

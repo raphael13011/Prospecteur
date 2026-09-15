@@ -1,10 +1,19 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #1e293b; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #1e293b; -webkit-font-smoothing: antialiased; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes countUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 input:focus, select:focus { border-color: #818cf8 !important; box-shadow: 0 0 0 3px rgba(129,140,248,.12) !important; }
 ::placeholder { color: #b0b0b0; }
 .nb:hover { border-color: #c7d2fe !important; background: #f5f3ff !important; }
 .lc:hover { border-color: #c7d2fe !important; }
 .gb:hover, .hi:hover { background: #f8fafc !important; }
+.hero-gradient { background: linear-gradient(135deg, #eef2ff 0%, #faf5ff 50%, #fff 100%); }
+.stat-card { animation: countUp 0.5s ease both; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.2s; }
+.step-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.06); }
+.pack-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,.1); }
+.cta-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(15,23,42,.2); }
