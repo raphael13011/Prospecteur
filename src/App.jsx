@@ -45,7 +45,7 @@ function Logo({ small }) {
   const c = z / 2;
   return (<div style={{ display: "flex", alignItems: "center", gap: 8 }}>
     <svg width={z} height={z} viewBox={"0 0 "+z+" "+z} style={{ flexShrink: 0 }}>
-      <rect width={z} height={z} rx="8" fill="#4f46e5"/>
+      <rect width={z} height={z} rx="8" fill="#0f172a"/>
       <circle cx={c} cy={c} r={z*0.31} fill="none" stroke="white" strokeWidth="2"/>
       <circle cx={c} cy={c} r={z*0.15} fill="none" stroke="white" strokeWidth="2"/>
       <circle cx={c} cy={c} r={z*0.055} fill="white"/>
@@ -80,9 +80,9 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
     <div style={S.overlay} onClick={onClose}><div style={S.modal} onClick={e => e.stopPropagation()}>
       <button style={S.closeBtn} onClick={onClose}>✕</button>
       <div style={{ display: "flex", justifyContent: "center", gap: 8, marginBottom: 20 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#4f46e5" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#4f46e5" : "#059669" }}>Compte</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "auth" ? "#0f172a" : "#059669", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>{step === "auth" ? "1" : "✓"}</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "auth" ? "#0f172a" : "#059669" }}>Compte</span></div>
         <div style={{ width: 24, height: 1, background: "#e5e7eb", alignSelf: "center" }} />
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#4f46e5" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#4f46e5" : "#94a3b8" }}>Crédits</span></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 24, height: 24, borderRadius: "50%", background: step === "pay" ? "#0f172a" : "#e5e7eb", color: step === "pay" ? "#fff" : "#94a3b8", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700 }}>2</div><span style={{ fontSize: 13, fontWeight: 600, color: step === "pay" ? "#0f172a" : "#94a3b8" }}>Crédits</span></div>
       </div>
       {step === "auth" && (<>
         <h2 style={{ fontSize: 20, fontWeight: 800, textAlign: "center", marginBottom: 2 }}>{mode === "signup" ? "Créez votre compte" : "Connexion"}</h2>
@@ -93,7 +93,7 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
           <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jean@exemple.fr" onKeyDown={onK} />
           <Input label="Mot de passe" type="password" value={pw} onChange={e => setPw(e.target.value)} placeholder="6 caractères min." onKeyDown={onK} />
         </div>
-        <button className="cta-btn" style={{ ...S.pBtn, marginTop: 16, background: "#4f46e5", ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
+        <button className="cta-btn" style={{ ...S.pBtn, marginTop: 16, background: "#0f172a", ...(ld ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={doAuth}>{ld ? <span style={S.spn} /> : "Continuer →"}</button>
         <div style={{ textAlign: "center", marginTop: 12, fontSize: 13, color: "#64748b" }}>
           {mode === "signup" ? <>Déjà inscrit ? <button style={S.tBtn} onClick={() => { setMode("login"); setErr(""); }}>Connexion</button></> : <>Pas de compte ? <button style={S.tBtn} onClick={() => { setMode("signup"); setErr(""); }}>S'inscrire</button></>}
         </div>
@@ -103,11 +103,11 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
         <p style={{ fontSize: 13, color: "#64748b", textAlign: "center", marginBottom: 16 }}>1 crédit = 1 lead · Paiement sécurisé Stripe</p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {Object.entries(PACKS).map(([id, p]) => (
-            <button key={id} className="pack-card" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #4f46e5", background: "#fafaff" } : {}) }} onClick={() => buy(id, onPaid)}>
-              {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "2px 10px", borderRadius: 10 }}>Populaire</span>}
+            <button key={id} className="pack-card" style={{ ...S.packRow, ...(p.popular ? { border: "2px solid #0f172a", background: "#f8fafc" } : {}) }} onClick={() => buy(id, onPaid)}>
+              {p.popular && <span style={{ position: "absolute", top: -8, right: 12, fontSize: 10, fontWeight: 700, color: "#fff", background: "#0f172a", padding: "2px 10px", borderRadius: 10 }}>Populaire</span>}
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                 <div><div style={{ fontWeight: 700, fontSize: 15 }}>{p.credits} crédits</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{p.per}</div></div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "#4f46e5" }}>{p.price}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a" }}>{p.price}</div>
               </div>
             </button>
           ))}
@@ -123,7 +123,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0", className: "stat-grid" }}>
       {[{ n: "30 sec", d: "Pour obtenir vos leads" }, { n: "12+", d: "Secteurs pré-configurés" }, { n: "0,12€", d: "Le lead le moins cher" }].map((s, i) => (
         <div key={i} className="stat-card" style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 12 }}>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#4f46e5", letterSpacing: "-0.02em" }}>{s.n}</div>
+          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>{s.n}</div>
           <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{s.d}</div>
         </div>
       ))}
@@ -132,7 +132,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     {/* HOW IT WORKS */}
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>COMMENT ÇA MARCHE</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>COMMENT ÇA MARCHE</div>
         <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>3 étapes, 30 secondes</h2>
       </div>
       <div className="step-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
@@ -143,7 +143,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
           <div key={s.n} className="step-card" style={{ padding: 24, borderRadius: 14, border: "1px solid #e5e7eb", transition: "all .2s" }}>
             <div style={{ fontSize: 28, marginBottom: 12 }}>{s.icon}</div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#4f46e5", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>{s.n}</div>
+              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>{s.n}</div>
               <div style={{ fontWeight: 700, fontSize: 15 }}>{s.title}</div>
             </div>
             <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{s.desc}</div>
@@ -155,7 +155,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     {/* PREVIEW */}
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>APERÇU</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>APERÇU</div>
         <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Voici ce que vous obtenez</h2>
         <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Résultat réel pour "Plombiers à Lyon"</p>
       </div>
@@ -184,19 +184,19 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     {/* PRICING */}
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>TARIFS</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>TARIFS</div>
         <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Payez à l'usage, sans engagement</h2>
         <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Pas d'abonnement. 1 crédit = 1 lead trouvé. Crédits valables à vie.</p>
       </div>
       <div className="pack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, maxWidth: 580, margin: "0 auto" }}>
         {Object.entries(PACKS).map(([id, p]) => (
-          <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #4f46e5" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#fafaff" : "#fff" }}>
-            {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#4f46e5", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
+          <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #0f172a" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#f8fafc" : "#fff" }}>
+            {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#0f172a", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
             <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8 }}>{p.desc}</div>
             <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
             <div style={{ fontSize: 16, fontWeight: 700, marginTop: 4 }}>{p.credits} crédits</div>
             <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, marginBottom: 16 }}>{p.per}</div>
-            <button className="cta-btn" onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#4f46e5" : "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
+            <button className="cta-btn" onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#0f172a" : "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
           </div>
         ))}
       </div>
@@ -257,7 +257,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     {/* FAQ */}
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#4f46e5", marginBottom: 8 }}>FAQ</div>
+        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>FAQ</div>
         <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Questions fréquentes</h2>
       </div>
       {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires professionnels, LinkedIn, pages légales. Ce ne sont pas des données statiques : chaque recherche est fraîche." },
@@ -278,7 +278,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     <div style={{ textAlign: "center", padding: "40px 20px", margin: "16px 0 0", borderRadius: 16, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" }}>
       <h2 style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Prêt à trouver vos clients ?</h2>
       <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 20, maxWidth: 400, margin: "0 auto 20px" }}>Choisissez un secteur, entrez une ville, et recevez vos premiers leads en 30 secondes.</p>
-      <button className="cta-btn" onClick={onCta} style={{ padding: "14px 40px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer maintenant →</button>
+      <button className="cta-btn" onClick={onCta} style={{ padding: "14px 40px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer maintenant →</button>
     </div>
 
     {/* FOOTER */}
@@ -488,7 +488,7 @@ export default function App() {
                 <div style={{ padding: "14px", background: "#f8fafc", borderRadius: 8, fontSize: 13.5, lineHeight: 1.7, whiteSpace: "pre-wrap" }}>{genEmail.body}</div>
               </div>
               <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-                <button className="cta-btn" style={{ ...S.pBtn, background: "#4f46e5", fontSize: 13 }} onClick={() => { navigator.clipboard.writeText("Objet: " + genEmail.subject + "\n\n" + genEmail.body); flash("Copié !"); }}>Copier l'email</button>
+                <button className="cta-btn" style={{ ...S.pBtn, background: "#0f172a", fontSize: 13 }} onClick={() => { navigator.clipboard.writeText("Objet: " + genEmail.subject + "\n\n" + genEmail.body); flash("Copié !"); }}>Copier l'email</button>
                 {emailModal.email && <a href={"mailto:" + emailModal.email + "?subject=" + encodeURIComponent(genEmail.subject) + "&body=" + encodeURIComponent(genEmail.body)} style={{ ...S.gBtn, display: "flex", alignItems: "center", justifyContent: "center", flex: 1, textDecoration: "none", textAlign: "center" }}>Ouvrir dans Mail</a>}
               </div>
               <p style={{ fontSize: 11, color: "#94a3b8", marginTop: 8, textAlign: "center" }}>1 crédit utilisé</p>
@@ -520,7 +520,7 @@ export default function App() {
         <div style={S.card}><div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 16 }}><div style={S.av}>{(user?.name || "U")[0].toUpperCase()}</div><div><div style={{ fontWeight: 700, fontSize: 17 }}>{user?.name}</div><div style={{ fontSize: 13, color: "#64748b" }}>{user?.email}</div></div></div>
           <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{balance}</div><div style={{ fontSize: 12, color: "#64748b" }}>crédits</div></div><div style={{ flex: 1, background: "#f8fafc", borderRadius: 8, padding: "12px 16px", textAlign: "center" }}><div style={{ fontSize: 24, fontWeight: 800 }}>{history.length}</div><div style={{ fontSize: 12, color: "#64748b" }}>recherches</div></div></div>
         </div>
-        <button className="cta-btn" style={{ ...S.pBtn, marginBottom: 10, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
+        <button className="cta-btn" style={{ ...S.pBtn, marginBottom: 10, background: "#0f172a" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button>
         <button className="gb" style={{ ...S.gBtn, color: "#94a3b8" }} onClick={logout}>Se déconnecter</button>
       </div>)}
 
@@ -529,17 +529,17 @@ export default function App() {
       {!legalPage && view === "history" && (<div><h2 style={S.secT}>Historique</h2>
         {history.map(h => (<div key={h.id} className="hi" style={S.histI} onClick={() => { setIndustry(h.industry); setLocation(h.location); setTarget(h.target || ""); setPicked([]); setView("search"); }}>
           <div><div style={{ fontWeight: 600, fontSize: 14 }}>{h.industry}</div><div style={{ fontSize: 13, color: "#64748b" }}>{h.location} · {h.lead_count} leads</div></div>
-          <span style={{ color: "#4f46e5", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
+          <span style={{ color: "#0f172a", fontSize: 13, fontWeight: 600 }}>Relancer →</span>
         </div>))}
       </div>)}
 
       {!legalPage && view === "search" && (<>
         {/* HERO */}
         {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
-          <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#4f46e5", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
+          <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
           <h1 className="hero-title" style={{ fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.15, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
           <p className="hero-sub" style={{ color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
-          <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(79,70,229,.3)" }}>Essayer maintenant ↓</button>
+          <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(0,0,0,.3)" }}>Essayer maintenant ↓</button>
         </div>)}
 
         {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800 }}>Nouvelle recherche</h2></div>)}
@@ -551,9 +551,9 @@ export default function App() {
               <button onClick={() => { setSearchMode("audiences"); setResults(null); }} style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", background: searchMode === "audiences" ? "#fff" : "transparent", color: searchMode === "audiences" ? "#0f172a" : "#64748b", boxShadow: searchMode === "audiences" ? "0 1px 3px rgba(0,0,0,.08)" : "none" }}>👥 Audiences (B2C)</button>
             </div>
             <div className="niche-grid" style={S.nGrid}>{NICHES.map(n => (
-            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#4f46e5", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
+            <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#0f172a", background: "#f1f5f9" } : {}) }} onClick={() => toggleNiche(n)}>
               <span style={{ fontSize: 17 }}>{n.icon}</span>
-              <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#0f172a" : "#475569" }}>{n.l}</span>
             </button>))}</div>
           <div className="form-row" style={S.fRow}>
             <Input label="Secteur d'activité" value={industry} onChange={e => { setIndustry(e.target.value); setPicked([]); }} placeholder="Ex : Plombiers, Restaurants, Avocats…" />
@@ -565,7 +565,7 @@ export default function App() {
           </div>
           {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
           {error && <div style={S.errBox}>{error}</div>}
-          <button className="cta-btn" style={{ ...S.pBtn, marginTop: 10, background: "#4f46e5", ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
+          <button className="cta-btn" style={{ ...S.pBtn, marginTop: 10, background: "#0f172a", ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
             {loading ? <><span style={S.spn} />{progress}</> : searchMode === "audiences" ? "Trouver des audiences →" : "Trouver " + (parseInt(count) || 10) + " prospects →"}
           </button>
         </div>
@@ -578,7 +578,7 @@ export default function App() {
             <button className="gb" style={S.gBtn} onClick={exportCSV}>↓ Exporter CSV</button>
           </div>
           {results.leads.map((l, i) => (
-            <div key={i} className="lc" style={{ ...S.lCard, animationDelay: `${i * .04}s`, ...(expandedId === i ? { borderColor: "#818cf8" } : {}) }} onClick={() => setExpandedId(expandedId === i ? null : i)}>
+            <div key={i} className="lc" style={{ ...S.lCard, animationDelay: `${i * .04}s`, ...(expandedId === i ? { borderColor: "#334155" } : {}) }} onClick={() => setExpandedId(expandedId === i ? null : i)}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                 <div style={{ flex: 1 }}><div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{l.company}</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{l.industry} · {l.location}</div></div>
                 <div style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: l.score >= 80 ? "#059669" : l.score >= 65 ? "#d97706" : "#94a3b8", background: l.score >= 80 ? "#ecfdf5" : l.score >= 65 ? "#fffbeb" : "#f8fafc" }}>{l.score}%</div>
@@ -597,10 +597,10 @@ export default function App() {
                 {l.website && <div><div style={S.dl}>Site</div><a href={l.website} target="_blank" rel="noopener noreferrer" style={S.da}>{l.website}</a></div>}
                 {l.reason && <div style={{ gridColumn: "1/-1" }}><div style={S.dl}>Pertinence</div><div style={S.dv}>{l.reason}</div></div>}
               </div>
-              <button className="cta-btn" onClick={(e) => { e.stopPropagation(); generateEmail(l); }} style={{ marginTop: 12, padding: "9px 16px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", width: "100%" }}>✍️ Générer un email de prospection</button>
+              <button className="cta-btn" onClick={(e) => { e.stopPropagation(); generateEmail(l); }} style={{ marginTop: 12, padding: "9px 16px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: "pointer", width: "100%" }}>✍️ Générer un email de prospection</button>
               </div>)}
             </div>))}
-          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
+          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#0f172a" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
         {audienceResults && (<div>
@@ -615,18 +615,18 @@ export default function App() {
                   <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{a.name}</div>
                   <div style={{ fontSize: 12, color: "#94a3b8" }}>{a.platform} · {a.location}</div>
                 </div>
-                {a.members && <div style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#4f46e5", background: "#eef2ff" }}>{a.members}</div>}
+                {a.members && <div style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#0f172a", background: "#f1f5f9" }}>{a.members}</div>}
               </div>
               <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.5, margin: "0 0 8px" }}>{a.description}</p>
               {a.relevance && <p style={{ fontSize: 12, color: "#059669", margin: "0 0 6px" }}>🎯 {a.relevance}</p>}
-              {a.tip && <p style={{ fontSize: 12, color: "#6366f1", margin: "0 0 8px", fontStyle: "italic" }}>💡 {a.tip}</p>}
+              {a.tip && <p style={{ fontSize: 12, color: "#1e293b", margin: "0 0 8px", fontStyle: "italic" }}>💡 {a.tip}</p>}
               <div style={{ display: "flex", gap: 6 }}>
                 {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>🔗 Ouvrir</a>}
                 <span style={S.ch}>{a.platform}</span>
               </div>
             </div>
           ))}
-          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Plus de crédits</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
+          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Plus de crédits</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#0f172a" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
         {showLanding && <LandingSections onCta={scrollToForm} onMentions={() => { setLegalPage("mentions"); window.scrollTo(0,0); }} onConfidentialite={() => { setLegalPage("confidentialite"); window.scrollTo(0,0); }} onCgu={() => { setLegalPage("cgu"); window.scrollTo(0,0); }} />}
@@ -638,25 +638,25 @@ export default function App() {
 const S = {
   root: { maxWidth: 1100, margin: "0 auto", padding: "0 24px 0" },
   ctr: { display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 },
-  spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#4f46e5", borderRadius: "50%", animation: "spin .7s linear infinite" },
+  spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#0f172a", borderRadius: "50%", animation: "spin .7s linear infinite" },
   spn: { display: "inline-block", width: 15, height: 15, border: "2.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .6s linear infinite", marginRight: 8 },
   toast: { position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", background: "#0f172a", color: "#fff", padding: "12px 24px", borderRadius: 12, fontSize: 14, fontWeight: 600, zIndex: 999, boxShadow: "0 8px 32px rgba(0,0,0,.2)" },
   overlay: { position: "fixed", inset: 0, background: "rgba(15,23,42,.6)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 900, padding: 16, backdropFilter: "blur(8px)" },
   modal: { background: "#fff", borderRadius: 20, padding: "32px", width: "100%", maxWidth: 420, position: "relative", animation: "slideUp .3s ease", boxShadow: "0 24px 48px rgba(0,0,0,.12)" },
   closeBtn: { position: "absolute", top: 16, right: 16, background: "#f8fafc", border: "none", width: 32, height: 32, borderRadius: "50%", fontSize: 16, color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
-  pBtn: { width: "100%", padding: "13px", background: "#4f46e5", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" },
+  pBtn: { width: "100%", padding: "13px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" },
   gBtn: { padding: "8px 16px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, fontSize: 13, fontWeight: 600, color: "#475569", cursor: "pointer", transition: "all .15s" },
   gBtnS: { padding: "6px 14px", background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8, fontSize: 12, fontWeight: 600, color: "#475569", cursor: "pointer", transition: "all .15s" },
-  bkBtn: { background: "none", border: "none", color: "#4f46e5", fontSize: 14, fontWeight: 600, cursor: "pointer", padding: "0 0 16px", display: "flex", alignItems: "center", gap: 4 },
-  tBtn: { background: "none", border: "none", color: "#4f46e5", fontWeight: 600, cursor: "pointer", fontSize: 13, padding: 0, textDecoration: "none" },
+  bkBtn: { background: "none", border: "none", color: "#0f172a", fontSize: 14, fontWeight: 600, cursor: "pointer", padding: "0 0 16px", display: "flex", alignItems: "center", gap: 4 },
+  tBtn: { background: "none", border: "none", color: "#0f172a", fontWeight: 600, cursor: "pointer", fontSize: 13, padding: 0, textDecoration: "none" },
   errBox: { margin: "12px 0", padding: "12px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10, color: "#dc2626", fontSize: 13, fontWeight: 500 },
   card: { background: "#fff", border: "1px solid #f1f5f9", borderRadius: 14, padding: "20px", marginBottom: 12, boxShadow: "0 1px 3px rgba(0,0,0,.04)" },
   label: { fontSize: 13, fontWeight: 600, color: "#374151", display: "block", marginBottom: 6 },
   input: { padding: "11px 14px", border: "1px solid #e2e8f0", borderRadius: 10, fontSize: 14, outline: "none", color: "#1e293b", width: "100%", boxSizing: "border-box", background: "#fff", transition: "all .15s" },
   topBar: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 0 20px", flexWrap: "wrap", gap: 12 },
   creditBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "#fff", borderRadius: 10, padding: "4px 16px", lineHeight: 1.2, border: "1px solid #e2e8f0", cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,.04)", transition: "all .15s" },
-  avBtn: { width: 36, height: 36, borderRadius: 10, background: "#4f46e5", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" },
-  av: { width: 52, height: 52, borderRadius: 14, background: "#eef2ff", color: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 },
+  avBtn: { width: 36, height: 36, borderRadius: 10, background: "#0f172a", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .15s" },
+  av: { width: 52, height: 52, borderRadius: 14, background: "#f1f5f9", color: "#0f172a", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 },
   sCard: { background: "#fff", border: "1px solid #f1f5f9", borderRadius: 16, padding: "24px", marginBottom: 12, boxShadow: "0 2px 8px rgba(0,0,0,.04)", maxWidth: 800, margin: "0 auto 12px", transition: "box-shadow .2s" },
   nGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(76px, 1fr))", gap: 6, marginBottom: 16 },
   nBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 4, padding: "10px 4px", borderRadius: 10, border: "1px solid #f1f5f9", background: "#fff", cursor: "pointer", transition: "all .15s" },
@@ -667,13 +667,13 @@ const S = {
   histI: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 20px", background: "#fff", border: "1px solid #f1f5f9", borderRadius: 12, marginBottom: 8, cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,.04)", transition: "all .15s" },
   lCard: { background: "#fff", border: "1px solid #f1f5f9", borderRadius: 14, padding: "18px 22px", marginBottom: 10, cursor: "pointer", transition: "all .15s ease", animation: "slideUp .3s ease both", boxShadow: "0 1px 3px rgba(0,0,0,.04)", maxWidth: 800, margin: "0 auto 10px" },
   ch: { padding: "4px 10px", background: "#f8fafc", borderRadius: 8, fontSize: 12, color: "#64748b", fontWeight: 500 },
-  chL: { padding: "4px 10px", background: "#eef2ff", borderRadius: 8, fontSize: 12, color: "#4f46e5", textDecoration: "none", fontWeight: 600 },
+  chL: { padding: "4px 10px", background: "#f1f5f9", borderRadius: 8, fontSize: 12, color: "#0f172a", textDecoration: "none", fontWeight: 600 },
   chOk: { padding: "4px 10px", background: "#ecfdf5", borderRadius: 8, fontSize: 12, color: "#059669", fontWeight: 600 },
   chWarn: { padding: "4px 10px", background: "#fffbeb", borderRadius: 8, fontSize: 12, color: "#d97706", fontWeight: 500 },
   chDup: { padding: "4px 10px", background: "#f1f5f9", borderRadius: 8, fontSize: 12, color: "#94a3b8", fontStyle: "italic" },
   dl: { fontSize: 11, fontWeight: 700, color: "#94a3b8", letterSpacing: ".05em", textTransform: "uppercase" },
   dv: { fontSize: 14, color: "#1e293b", lineHeight: 1.5, marginTop: 2 },
-  da: { fontSize: 14, color: "#4f46e5", textDecoration: "none", fontWeight: 500 },
-  ups: { border: "2px solid #4f46e5", borderRadius: 16, padding: "28px", marginTop: 24, background: "linear-gradient(135deg, #fafaff, #eef2ff)", maxWidth: 800, margin: "24px auto 0" },
+  da: { fontSize: 14, color: "#0f172a", textDecoration: "none", fontWeight: 500 },
+  ups: { border: "2px solid #0f172a", borderRadius: 16, padding: "28px", marginTop: 24, background: "linear-gradient(135deg, #f8fafc, #f1f5f9)", maxWidth: 800, margin: "24px auto 0" },
   packRow: { display: "flex", alignItems: "center", width: "100%", padding: "16px 18px", border: "1px solid #e2e8f0", borderRadius: 12, background: "#fff", cursor: "pointer", position: "relative", transition: "all .15s" },
 };
