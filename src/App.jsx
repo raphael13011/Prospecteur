@@ -120,26 +120,26 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
 function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner }) {
   return (<>
     {/* SOCIAL PROOF BAR */}
-    <div style={{ display: "flex", gap: 32, padding: "40px 0", borderTop: "1px solid #f1f5f9", flexWrap: "wrap" }}>
+    <div style={{ display: "flex", gap: 48, padding: "48px 0", borderTop: "1px solid #e5e7eb", flexWrap: "wrap", justifyContent: "center" }}>
       {[{ n: "30s", d: "Temps moyen par recherche" }, { n: "12+", d: "Secteurs disponibles" }, { n: "0,12€", d: "Coût minimum par lead" }].map((s, i) => (
         <div key={i}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.02em" }}>{s.n}</div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "#111827", letterSpacing: "-0.02em" }}>{s.n}</div>
           <div style={{ fontSize: 14, color: "#94a3b8", marginTop: 2 }}>{s.d}</div>
         </div>
       ))}
     </div>
 
     {/* HOW IT WORKS */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Comment ça marche</p>
-      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 40 }}>Trois étapes, trente secondes.</h2>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <p style={{ fontSize: 14, color: "#2563eb", marginBottom: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Comment ça marche</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 40, textAlign: "center" }}>Trois étapes, trente secondes.</h2>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24 }}>
         {[{ n: "01", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville. Ou tapez directement votre niche." },
           { n: "02", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel — sites, annuaires, LinkedIn — et identifie vos prospects." },
           { n: "03", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site, dirigeant, score de pertinence. Exportez en CSV en un clic." }
         ].map(s => (
           <div key={s.n} style={{ padding: "24px 0" }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8", marginBottom: 12 }}>{s.n}</div>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#2563eb", marginBottom: 12 }}>{s.n}</div>
             <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 8, color: "#0f172a" }}>{s.title}</div>
             <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{s.desc}</div>
           </div>
@@ -148,10 +148,10 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* PREVIEW */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Aperçu</p>
-      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>Voici ce que vous obtenez.</h2>
-      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, overflow: "hidden", maxWidth: 700 }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <p style={{ fontSize: 14, color: "#2563eb", marginBottom: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Aperçu</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32, textAlign: "center" }}>Voici ce que vous obtenez.</h2>
+      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, overflow: "hidden", maxWidth: 700, margin: "0 auto" }}>
         <div style={{ padding: "10px 20px", background: "#fafafa", borderBottom: "1px solid #f1f5f9", fontSize: 13, color: "#94a3b8" }}>3 résultats — Plombiers — Lyon</div>
         {[{ c: "Plomberie Martin & Fils", loc: "Lyon 3e", contact: "Pierre Martin, Gérant", sc: 92, em: true, ph: true },
           { c: "Atelier Duval Rénovation", loc: "Villeurbanne", contact: "Marc Duval, Dirigeant", sc: 87, em: true, ph: false },
@@ -173,11 +173,11 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* PRICING */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Tarifs</p>
-      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 8 }}>Payez à l'usage.</h2>
-      <p style={{ fontSize: 16, color: "#64748b", marginBottom: 32 }}>Pas d'abonnement. 1 crédit = 1 lead. Crédits valables à vie.</p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, maxWidth: 700 }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <p style={{ fontSize: 14, color: "#2563eb", marginBottom: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Tarifs</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 8, textAlign: "center" }}>Payez à l'usage.</h2>
+      <p style={{ fontSize: 16, color: "#64748b", marginBottom: 32, textAlign: "center" }}>Pas d'abonnement. 1 crédit = 1 lead. Crédits valables à vie.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, maxWidth: 700, margin: "0 auto" }}>
         {Object.entries(PACKS).map(([id, p]) => (
           <div key={id} style={{ padding: "28px 24px", border: p.popular ? "2px solid #0f172a" : "1px solid #e2e8f0", borderRadius: 12, position: "relative", background: "#fff" }}>
             {p.popular && <div style={{ position: "absolute", top: -10, left: 20, fontSize: 12, fontWeight: 600, color: "#fff", background: "#0f172a", padding: "2px 12px", borderRadius: 6 }}>Populaire</div>}
@@ -192,8 +192,8 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* TRUST */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24, maxWidth: 700, margin: "0 auto" }}>
         {[{ t: "Sources publiques", d: "Sites web, annuaires, LinkedIn, registres officiels. Aucune donnée privée." },
           { t: "Paiement sécurisé", d: "Stripe, le leader mondial. Vos données bancaires ne passent jamais par nos serveurs." },
           { t: "RGPD conforme", d: "Données B2B professionnelles, intérêt légitime (art. 6.1.f). Zéro cookie publicitaire." },
@@ -208,10 +208,10 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* RGPD DETAIL */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Conformité</p>
-      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>100% conforme RGPD.</h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 640 }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <p style={{ fontSize: 14, color: "#2563eb", marginBottom: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Conformité</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32, textAlign: "center" }}>100% conforme RGPD.</h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 640, margin: "0 auto" }}>
         {[{ t: "Sources publiques uniquement", d: "Sites web d'entreprises, annuaires professionnels, profils LinkedIn publics, registres officiels." },
           { t: "Données B2B professionnelles", d: "Email d'entreprise, téléphone du bureau, nom de société. Le RGPD autorise le traitement sur la base de l'intérêt légitime (article 6.1.f)." },
           { t: "Pas de stockage massif", d: "L'IA recherche en temps réel à la demande. Les résultats sont conservés dans votre compte uniquement." },
@@ -219,7 +219,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
           { t: "Zéro cookie publicitaire", d: "Aucun tracker, aucune pub, aucun cookie tiers." }
         ].map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
-            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>✓</div>
+            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#2563eb", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>✓</div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a", marginBottom: 2 }}>{item.t}</div>
               <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{item.d}</div>
@@ -230,10 +230,10 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* FAQ */}
-    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>FAQ</p>
-      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>Questions fréquentes.</h2>
-      <div style={{ maxWidth: 640 }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #e5e7eb" }}>
+      <p style={{ fontSize: 14, color: "#2563eb", marginBottom: 8, textAlign: "center", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>FAQ</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32, textAlign: "center" }}>Questions fréquentes.</h2>
+      <div style={{ maxWidth: 640, margin: "0 auto" }}>
         {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires, LinkedIn, pages légales. Chaque recherche est fraîche." },
           { q: "Les contacts sont-ils fiables ?", a: "Chaque lead a un score de pertinence. Les emails sont vérifiés par contrôle MX." },
           { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie." },
@@ -249,14 +249,14 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     </div>
 
     {/* FINAL CTA */}
-    <div style={{ padding: "64px 0", borderTop: "1px solid #f1f5f9", textAlign: "center" }}>
+    <div style={{ padding: "64px 0", borderTop: "1px solid #e5e7eb", textAlign: "center" }}>
       <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 12 }}>Prêt à trouver vos clients ?</h2>
       <p style={{ fontSize: 16, color: "#64748b", marginBottom: 24 }}>Commencez en 30 secondes.</p>
       <button onClick={onCta} style={{ padding: "12px 32px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer", transition: "all .15s" }}>Commencer →</button>
     </div>
 
     {/* FOOTER */}
-    <div style={{ padding: "32px 0", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+    <div style={{ padding: "32px 0", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
       <div style={{ fontSize: 13, color: "#94a3b8" }}>© 2026 Huntly</div>
       <div style={{ display: "flex", gap: 20 }}>
         <button onClick={onMentions} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>Mentions légales</button>
@@ -445,15 +445,15 @@ export default function App() {
 
       {!legalPage && view === "search" && (<>
         {/* HERO */}
-        {showLanding && (<div style={{ padding: "72px 0 0" }}>
-          <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1.15, color: "#0f172a", marginBottom: 24, maxWidth: 600 }}>Trouvez des clients pour n'importe quel business.</h1>
-          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#6b7280", maxWidth: 500, lineHeight: 1.7, marginBottom: 32 }}>L'IA parcourt le web et vous livre des prospects qualifiés avec email, téléphone et contact clé. En 30 secondes.</p>
-          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 56 }}>
+        {showLanding && (<div style={{ padding: "72px 0 0", textAlign: "center" }}>
+          <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1.15, color: "#0f172a", marginBottom: 24, maxWidth: 600, margin: "0 auto 24px" }}>Trouvez des clients pour n'importe quel business.</h1>
+          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#6b7280", maxWidth: 500, lineHeight: 1.7, marginBottom: 32, margin: "0 auto 32px" }}>L'IA parcourt le web et vous livre des prospects qualifiés avec email, téléphone et contact clé. En 30 secondes.</p>
+          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 56, justifyContent: "center" }}>
             <button onClick={scrollToForm} style={{ padding: "10px 24px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "all .15s", letterSpacing: "-0.01em" }}>Commencer gratuitement ↓</button>
             <button onClick={scrollToForm} style={{ padding: "10px 24px", background: "transparent", color: "#0f172a", border: "1px solid #d1d5db", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "all .15s" }}>Voir une démo →</button>
           </div>
           {/* Product mockup */}
-          <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", maxWidth: 720 }}>
+          <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", maxWidth: 720, margin: "0 auto" }}>
             <div style={{ padding: "8px 16px", background: "#f3f4f6", borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 8 }}>
               <div style={{ display: "flex", gap: 5 }}><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /></div>
               <div style={{ flex: 1, textAlign: "center", fontSize: 12, color: "#9ca3af" }}>huntly.fr</div>
