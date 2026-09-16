@@ -218,6 +218,42 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
       </div>
     </div>
 
+
+    {/* RGPD */}
+    <div style={{ padding: "32px 0" }}>
+      <div style={{ borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
+        <div style={{ padding: "20px 24px", background: "#0f172a", color: "#fff" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+            <span style={{ fontSize: 24 }}>🛡️</span>
+            <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>100% conforme RGPD</h2>
+          </div>
+          <p style={{ fontSize: 14, color: "#94a3b8", margin: 0, lineHeight: 1.6 }}>Huntly est conçu pour respecter la réglementation européenne sur les données personnelles.</p>
+        </div>
+        <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Sources publiques uniquement</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Toutes les données proviennent de sources accessibles publiquement : sites web d'entreprises, annuaires professionnels (Pages Jaunes, Societe.com), profils LinkedIn publics, registres officiels (INSEE, RCS). Aucune donnée privée n'est collectée.</div></div>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Données B2B professionnelles</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Huntly cible exclusivement les données professionnelles (email d'entreprise, téléphone du bureau, nom de société). Le RGPD autorise le traitement de données professionnelles sur la base de l'intérêt légitime (article 6.1.f).</div></div>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Pas de stockage massif</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Contrairement aux grandes bases de données, Huntly ne stocke pas des millions de profils. L'IA recherche en temps réel, uniquement à la demande. Les résultats sont conservés dans votre compte et nulle part ailleurs.</div></div>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Vos données sont protégées</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Mots de passe chiffrés (bcrypt), connexions HTTPS, authentification par token JWT, paiement sécurisé par Stripe. Vous pouvez supprimer votre compte et toutes vos données à tout moment.</div></div>
+          </div>
+          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
+            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Zéro cookie publicitaire</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Aucun tracker, aucune pub, aucun cookie tiers. Seuls des cookies techniques nécessaires au fonctionnement du service sont utilisés.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     {/* FAQ */}
     <div style={{ padding: "32px 0" }}>
       <div style={{ textAlign: "center", marginBottom: 24 }}>
