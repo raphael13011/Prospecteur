@@ -117,64 +117,55 @@ function StepModal({ step, onAuth, onPaid, onClose, count }) {
   );
 }
 
-function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
+function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner }) {
   return (<>
-    {/* STATS BAR */}
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, padding: "32px 0", className: "stat-grid" }}>
-      {[{ n: "30 sec", d: "Pour obtenir vos leads" }, { n: "12+", d: "Secteurs pré-configurés" }, { n: "0,12€", d: "Le lead le moins cher" }].map((s, i) => (
-        <div key={i} className="stat-card" style={{ textAlign: "center", padding: "16px 8px", background: "#f8fafc", borderRadius: 12 }}>
-          <div style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.02em" }}>{s.n}</div>
-          <div style={{ fontSize: 12, color: "#64748b", marginTop: 2 }}>{s.d}</div>
+    {/* SOCIAL PROOF BAR */}
+    <div style={{ display: "flex", gap: 32, padding: "40px 0", borderTop: "1px solid #f1f5f9", flexWrap: "wrap" }}>
+      {[{ n: "30s", d: "Temps moyen par recherche" }, { n: "12+", d: "Secteurs disponibles" }, { n: "0,12€", d: "Coût minimum par lead" }].map((s, i) => (
+        <div key={i}>
+          <div style={{ fontSize: 28, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.02em" }}>{s.n}</div>
+          <div style={{ fontSize: 14, color: "#94a3b8", marginTop: 2 }}>{s.d}</div>
         </div>
       ))}
     </div>
 
     {/* HOW IT WORKS */}
-    <div style={{ padding: "32px 0" }}>
-      <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>COMMENT ÇA MARCHE</div>
-        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>3 étapes, 30 secondes</h2>
-      </div>
-      <div className="step-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
-        {[{ icon: "🎯", n: "1", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville. Ou tapez directement votre niche." },
-          { icon: "🤖", n: "2", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel — sites, annuaires, LinkedIn — et identifie vos prospects." },
-          { icon: "📋", n: "3", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site, dirigeant, score de pertinence. Exportez en CSV en 1 clic." }
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Comment ça marche</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 40 }}>Trois étapes, trente secondes.</h2>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 24 }}>
+        {[{ n: "01", title: "Choisissez votre cible", desc: "Sélectionnez un ou plusieurs secteurs et une ville. Ou tapez directement votre niche." },
+          { n: "02", title: "L'IA cherche pour vous", desc: "Notre IA parcourt le web en temps réel — sites, annuaires, LinkedIn — et identifie vos prospects." },
+          { n: "03", title: "Récupérez vos leads", desc: "Nom, email, téléphone, site, dirigeant, score de pertinence. Exportez en CSV en un clic." }
         ].map(s => (
-          <div key={s.n} className="step-card" style={{ padding: 24, borderRadius: 14, border: "1px solid #e5e7eb", transition: "all .2s" }}>
-            <div style={{ fontSize: 28, marginBottom: 12 }}>{s.icon}</div>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-              <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 12 }}>{s.n}</div>
-              <div style={{ fontWeight: 700, fontSize: 15 }}>{s.title}</div>
-            </div>
-            <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>{s.desc}</div>
+          <div key={s.n} style={{ padding: "24px 0" }}>
+            <div style={{ fontSize: 13, fontWeight: 600, color: "#94a3b8", marginBottom: 12 }}>{s.n}</div>
+            <div style={{ fontWeight: 700, fontSize: 17, marginBottom: 8, color: "#0f172a" }}>{s.title}</div>
+            <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{s.desc}</div>
           </div>
         ))}
       </div>
     </div>
 
     {/* PREVIEW */}
-    <div style={{ padding: "32px 0" }}>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>APERÇU</div>
-        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Voici ce que vous obtenez</h2>
-        <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Résultat réel pour "Plombiers à Lyon"</p>
-      </div>
-      <div style={{ border: "1px solid #e5e7eb", borderRadius: 14, overflow: "hidden", boxShadow: "0 4px 16px rgba(0,0,0,.04)" }}>
-        <div style={{ padding: "10px 18px", background: "#f8fafc", borderBottom: "1px solid #e5e7eb", fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>3 résultats · Plombiers · Lyon</div>
-        {[{ c: "Plomberie Martin & Fils", loc: "Lyon 3e", desc: "Entreprise familiale spécialisée en dépannage et rénovation plomberie depuis 2008.", sc: 92, em: true, ph: true, contact: "Pierre Martin — Gérant" },
-          { c: "Atelier Duval Rénovation", loc: "Villeurbanne", desc: "Plomberie, chauffage et climatisation pour particuliers et professionnels.", sc: 87, em: true, ph: false, contact: "Marc Duval — Dirigeant" },
-          { c: "SOS Dépannage Express", loc: "Lyon 7e", desc: "Interventions rapides en plomberie et serrurerie, 7j/7.", sc: 84, em: true, ph: true, contact: "Sarah Benali — Responsable" }
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Aperçu</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>Voici ce que vous obtenez.</h2>
+      <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, overflow: "hidden", maxWidth: 700 }}>
+        <div style={{ padding: "10px 20px", background: "#fafafa", borderBottom: "1px solid #f1f5f9", fontSize: 13, color: "#94a3b8" }}>3 résultats — Plombiers — Lyon</div>
+        {[{ c: "Plomberie Martin & Fils", loc: "Lyon 3e", contact: "Pierre Martin, Gérant", sc: 92, em: true, ph: true },
+          { c: "Atelier Duval Rénovation", loc: "Villeurbanne", contact: "Marc Duval, Dirigeant", sc: 87, em: true, ph: false },
+          { c: "SOS Dépannage Express", loc: "Lyon 7e", contact: "Sarah Benali, Responsable", sc: 84, em: true, ph: true }
         ].map((l, i) => (
-          <div key={i} style={{ padding: "16px 18px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
-              <div><div style={{ fontWeight: 700, fontSize: 14 }}>{l.c}</div><div style={{ fontSize: 12, color: "#94a3b8" }}>{l.loc} · {l.contact}</div></div>
-              <span style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#059669", background: "#ecfdf5" }}>{l.sc}%</span>
+          <div key={i} style={{ padding: "16px 20px", borderBottom: i < 2 ? "1px solid #f1f5f9" : "none", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 14, color: "#0f172a" }}>{l.c}</div>
+              <div style={{ fontSize: 13, color: "#94a3b8" }}>{l.loc} · {l.contact}</div>
             </div>
-            <div style={{ fontSize: 13, color: "#64748b", marginBottom: 8 }}>{l.desc}</div>
-            <div style={{ display: "flex", gap: 6 }}>
-              {l.em && <span style={S.chOk}>✉️ Email dispo</span>}
-              {l.ph && <span style={S.chOk}>📞 Tél. dispo</span>}
-              <span style={S.ch}>🌐 Site web</span>
+            <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
+              {l.em && <span style={{ padding: "3px 8px", background: "#f1f5f9", borderRadius: 6, fontSize: 11, color: "#64748b" }}>Email</span>}
+              {l.ph && <span style={{ padding: "3px 8px", background: "#f1f5f9", borderRadius: 6, fontSize: 11, color: "#64748b" }}>Tél</span>}
+              <span style={{ padding: "3px 8px", background: "#0f172a", borderRadius: 6, fontSize: 11, color: "#fff", fontWeight: 600 }}>{l.sc}%</span>
             </div>
           </div>
         ))}
@@ -182,181 +173,100 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu }) {
     </div>
 
     {/* PRICING */}
-    <div style={{ padding: "32px 0" }}>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>TARIFS</div>
-        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Payez à l'usage, sans engagement</h2>
-        <p style={{ fontSize: 14, color: "#64748b", marginTop: 6 }}>Pas d'abonnement. 1 crédit = 1 lead trouvé. Crédits valables à vie.</p>
-      </div>
-      <div className="pack-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: 12, maxWidth: 580, margin: "0 auto" }}>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Tarifs</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 8 }}>Payez à l'usage.</h2>
+      <p style={{ fontSize: 16, color: "#64748b", marginBottom: 32 }}>Pas d'abonnement. 1 crédit = 1 lead. Crédits valables à vie.</p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16, maxWidth: 700 }}>
         {Object.entries(PACKS).map(([id, p]) => (
-          <div key={id} className="pack-card" style={{ border: p.popular ? "2px solid #0f172a" : "1px solid #e5e7eb", borderRadius: 14, padding: "28px 20px", textAlign: "center", position: "relative", transition: "all .2s", background: p.popular ? "#f8fafc" : "#fff" }}>
-            {p.popular && <div style={{ position: "absolute", top: -11, left: "50%", transform: "translateX(-50%)", fontSize: 11, fontWeight: 700, color: "#fff", background: "#0f172a", padding: "3px 14px", borderRadius: 20, whiteSpace: "nowrap" }}>Le + choisi</div>}
-            <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8 }}>{p.desc}</div>
-            <div style={{ fontSize: 28, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
-            <div style={{ fontSize: 16, fontWeight: 700, marginTop: 4 }}>{p.credits} crédits</div>
-            <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 4, marginBottom: 16 }}>{p.per}</div>
-            <button className="cta-btn" onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#0f172a" : "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
+          <div key={id} style={{ padding: "28px 24px", border: p.popular ? "2px solid #0f172a" : "1px solid #e2e8f0", borderRadius: 12, position: "relative", background: "#fff" }}>
+            {p.popular && <div style={{ position: "absolute", top: -10, left: 20, fontSize: 12, fontWeight: 600, color: "#fff", background: "#0f172a", padding: "2px 12px", borderRadius: 6 }}>Populaire</div>}
+            <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 12 }}>{p.desc}</div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.03em" }}>{p.price}</div>
+            <div style={{ fontSize: 15, color: "#475569", marginTop: 4 }}>{p.credits} crédits</div>
+            <div style={{ fontSize: 13, color: "#94a3b8", marginTop: 2, marginBottom: 20 }}>{p.per}</div>
+            <button onClick={onCta} style={{ width: "100%", padding: "10px", background: p.popular ? "#0f172a" : "#fff", color: p.popular ? "#fff" : "#0f172a", border: p.popular ? "none" : "1px solid #e2e8f0", borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: "pointer", transition: "all .15s" }}>Commencer</button>
           </div>
         ))}
       </div>
     </div>
 
     {/* TRUST */}
-    <div style={{ padding: "24px 0 32px" }}>
-      <div className="trust-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12 }}>
-        {[{ icon: "🔒", t: "Paiement sécurisé", d: "Stripe, le leader mondial du paiement en ligne" },
-          { icon: "🇫🇷", t: "100% français", d: "Interface, données et support en français" },
-          { icon: "⚡", t: "Résultats instantanés", d: "L'IA cherche en temps réel, pas de base statique" },
-          { icon: "🛡️", t: "RGPD-friendly", d: "Données issues de sources publiques uniquement" }
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 24 }}>
+        {[{ t: "Sources publiques", d: "Sites web, annuaires, LinkedIn, registres officiels. Aucune donnée privée." },
+          { t: "Paiement sécurisé", d: "Stripe, le leader mondial. Vos données bancaires ne passent jamais par nos serveurs." },
+          { t: "RGPD conforme", d: "Données B2B professionnelles, intérêt légitime (art. 6.1.f). Zéro cookie publicitaire." },
+          { t: "Résultats en temps réel", d: "L'IA cherche sur le web à la demande. Pas de base de données statique." }
         ].map((t, i) => (
-          <div key={i} style={{ display: "flex", gap: 12, padding: "16px", borderRadius: 12, background: "#f8fafc" }}>
-            <div style={{ fontSize: 24, flexShrink: 0 }}>{t.icon}</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{t.t}</div><div style={{ fontSize: 12, color: "#64748b", lineHeight: 1.5 }}>{t.d}</div></div>
+          <div key={i}>
+            <div style={{ fontWeight: 700, fontSize: 15, color: "#0f172a", marginBottom: 6 }}>{t.t}</div>
+            <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{t.d}</div>
           </div>
         ))}
       </div>
     </div>
 
-
-    {/* RGPD */}
-    <div style={{ padding: "32px 0" }}>
-      <div style={{ borderRadius: 16, border: "1px solid #e5e7eb", overflow: "hidden" }}>
-        <div style={{ padding: "20px 24px", background: "#0f172a", color: "#fff" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-            <span style={{ fontSize: 24 }}>🛡️</span>
-            <h2 style={{ fontSize: 20, fontWeight: 800, margin: 0 }}>100% conforme RGPD</h2>
+    {/* RGPD DETAIL */}
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>Conformité</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>100% conforme RGPD.</h2>
+      <div style={{ display: "flex", flexDirection: "column", gap: 20, maxWidth: 640 }}>
+        {[{ t: "Sources publiques uniquement", d: "Sites web d'entreprises, annuaires professionnels, profils LinkedIn publics, registres officiels." },
+          { t: "Données B2B professionnelles", d: "Email d'entreprise, téléphone du bureau, nom de société. Le RGPD autorise le traitement sur la base de l'intérêt légitime (article 6.1.f)." },
+          { t: "Pas de stockage massif", d: "L'IA recherche en temps réel à la demande. Les résultats sont conservés dans votre compte uniquement." },
+          { t: "Vos données protégées", d: "Chiffrement bcrypt, connexions HTTPS, authentification JWT, paiement Stripe." },
+          { t: "Zéro cookie publicitaire", d: "Aucun tracker, aucune pub, aucun cookie tiers." }
+        ].map((item, i) => (
+          <div key={i} style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
+            <div style={{ width: 20, height: 20, borderRadius: "50%", background: "#0f172a", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>✓</div>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a", marginBottom: 2 }}>{item.t}</div>
+              <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{item.d}</div>
+            </div>
           </div>
-          <p style={{ fontSize: 14, color: "#94a3b8", margin: 0, lineHeight: 1.6 }}>Huntly est conçu pour respecter la réglementation européenne sur les données personnelles.</p>
-        </div>
-        <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Sources publiques uniquement</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Toutes les données proviennent de sources accessibles publiquement : sites web d'entreprises, annuaires professionnels (Pages Jaunes, Societe.com), profils LinkedIn publics, registres officiels (INSEE, RCS). Aucune donnée privée n'est collectée.</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Données B2B professionnelles</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Huntly cible exclusivement les données professionnelles (email d'entreprise, téléphone du bureau, nom de société). Le RGPD autorise le traitement de données professionnelles sur la base de l'intérêt légitime (article 6.1.f).</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Pas de stockage massif</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Contrairement aux grandes bases de données, Huntly ne stocke pas des millions de profils. L'IA recherche en temps réel, uniquement à la demande. Les résultats sont conservés dans votre compte et nulle part ailleurs.</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Vos données sont protégées</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Mots de passe chiffrés (bcrypt), connexions HTTPS, authentification par token JWT, paiement sécurisé par Stripe. Vous pouvez supprimer votre compte et toutes vos données à tout moment.</div></div>
-          </div>
-          <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-            <div style={{ width: 32, height: 32, borderRadius: 8, background: "#ecfdf5", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16, flexShrink: 0 }}>✅</div>
-            <div><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 2 }}>Zéro cookie publicitaire</div><div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.6 }}>Aucun tracker, aucune pub, aucun cookie tiers. Seuls des cookies techniques nécessaires au fonctionnement du service sont utilisés.</div></div>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
 
     {/* FAQ */}
-    <div style={{ padding: "32px 0" }}>
-      <div style={{ textAlign: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", marginBottom: 8 }}>FAQ</div>
-        <h2 className="section-title" style={{ fontWeight: 800, letterSpacing: "-0.03em" }}>Questions fréquentes</h2>
+    <div style={{ padding: "56px 0", borderTop: "1px solid #f1f5f9" }}>
+      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 8 }}>FAQ</p>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 32 }}>Questions fréquentes.</h2>
+      <div style={{ maxWidth: 640 }}>
+        {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires, LinkedIn, pages légales. Chaque recherche est fraîche." },
+          { q: "Les contacts sont-ils fiables ?", a: "Chaque lead a un score de pertinence. Les emails sont vérifiés par contrôle MX." },
+          { q: "Les crédits expirent-ils ?", a: "Non. Vos crédits sont valables à vie." },
+          { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic. Compatible avec tous les CRM et tableurs." },
+          { q: "Combien de temps prend une recherche ?", a: "Entre 15 et 45 secondes. L'IA parcourt le web en temps réel." }
+        ].map((f, i) => (
+          <div key={i} style={{ borderBottom: "1px solid #f1f5f9", padding: "20px 0" }}>
+            <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a", marginBottom: 6 }}>{f.q}</div>
+            <div style={{ fontSize: 14, color: "#64748b", lineHeight: 1.7 }}>{f.a}</div>
+          </div>
+        ))}
       </div>
-      {[{ q: "D'où viennent les données ?", a: "L'IA recherche en temps réel sur le web — sites d'entreprises, annuaires professionnels, LinkedIn, pages légales. Ce ne sont pas des données statiques : chaque recherche est fraîche." },
-        { q: "Est-ce que les contacts sont fiables ?", a: "Chaque lead a un score de pertinence. Les emails et téléphones sont extraits de sources publiques et vérifiés quand c'est possible. Le score vous permet de prioriser les meilleurs prospects." },
-        { q: "Les crédits expirent-ils ?", a: "Non, jamais. Vos crédits sont valables à vie, sans date d'expiration ni renouvellement automatique." },
-        { q: "Puis-je exporter mes leads ?", a: "Oui, en CSV en un clic. Le fichier est compatible avec tous les CRM (HubSpot, Pipedrive, Salesforce) et tableurs (Excel, Google Sheets)." },
-        { q: "C'est conforme au RGPD ?", a: "Les données sont issues exclusivement de sources publiques (sites web, annuaires). Nous ne stockons aucune donnée personnelle au-delà de votre compte utilisateur." },
-        { q: "Combien de temps prend une recherche ?", a: "Entre 15 et 45 secondes selon le nombre de leads demandé. L'IA parcourt le web en temps réel, ce n'est pas une simple requête dans une base de données." }
-      ].map((f, i) => (
-        <div key={i} style={{ borderBottom: "1px solid #f1f5f9", padding: "16px 0" }}>
-          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: "#0f172a" }}>{f.q}</div>
-          <div style={{ fontSize: 13.5, color: "#64748b", lineHeight: 1.6 }}>{f.a}</div>
-        </div>
-      ))}
     </div>
 
     {/* FINAL CTA */}
-    <div style={{ textAlign: "center", padding: "40px 20px", margin: "16px 0 0", borderRadius: 16, background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)" }}>
-      <h2 style={{ fontSize: 20, fontWeight: 800, color: "#fff", marginBottom: 8 }}>Prêt à trouver vos clients ?</h2>
-      <p style={{ fontSize: 14, color: "#94a3b8", marginBottom: 20, maxWidth: 400, margin: "0 auto 20px" }}>Choisissez un secteur, entrez une ville, et recevez vos premiers leads en 30 secondes.</p>
-      <button className="cta-btn" onClick={onCta} style={{ padding: "14px 40px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", transition: "all .15s" }}>Commencer maintenant →</button>
+    <div style={{ padding: "64px 0", borderTop: "1px solid #f1f5f9", textAlign: "center" }}>
+      <h2 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.03em", marginBottom: 12 }}>Prêt à trouver vos clients ?</h2>
+      <p style={{ fontSize: 16, color: "#64748b", marginBottom: 24 }}>Commencez en 30 secondes.</p>
+      <button onClick={onCta} style={{ padding: "12px 32px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 15, fontWeight: 600, cursor: "pointer", transition: "all .15s" }}>Commencer →</button>
     </div>
 
     {/* FOOTER */}
-    <div style={{ textAlign: "center", padding: "32px 0 16px" }}>
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 8, marginBottom: 8 }}><Logo small /></div>
-      <p style={{ fontSize: 12, color: "#94a3b8" }}>Paiement sécurisé par Stripe · hello@huntly.fr</p>
-      <div style={{ display: "flex", justifyContent: "center", gap: 16, marginTop: 8 }}>
-        <button onClick={onMentions} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Mentions légales</button>
-        <button onClick={onConfidentialite} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>Confidentialité</button>
-        <button onClick={onCgu} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 12, cursor: "pointer", textDecoration: "underline" }}>CGU</button>
+    <div style={{ padding: "32px 0", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+      <div style={{ fontSize: 13, color: "#94a3b8" }}>© 2026 Huntly</div>
+      <div style={{ display: "flex", gap: 20 }}>
+        <button onClick={onMentions} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>Mentions légales</button>
+        <button onClick={onConfidentialite} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>Confidentialité</button>
+        <button onClick={onCgu} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>CGU</button>
       </div>
-      <p style={{ fontSize: 11, color: "#cbd5e1", marginTop: 8 }}>© 2026 Huntly. Tous droits réservés.</p>
     </div>
   </>);
 }
 
-
-function LegalPage({ page, onBack }) {
-  const sty = { padding: "24px 0 48px" };
-  const h2 = { fontSize: 20, fontWeight: 800, marginBottom: 16 };
-  const h3 = { fontSize: 15, fontWeight: 700, marginTop: 20, marginBottom: 8 };
-  const p = { fontSize: 13.5, color: "#475569", lineHeight: 1.7, marginBottom: 10 };
-
-  return (<div style={sty}>
-    <button style={S.bkBtn} onClick={onBack}>← Retour</button>
-
-    {page === "mentions" && (<>
-      <h2 style={h2}>Mentions légales</h2>
-      <h3 style={h3}>Éditeur du site</h3>
-      <p style={p}>Le site Huntly est édité par [Votre nom ou raison sociale], [forme juridique], au capital de [montant] euros.<br/>Siège social : [Adresse complète]<br/>SIRET : [Numéro SIRET]<br/>Directeur de la publication : [Nom du responsable]<br/>Contact : hello@huntly.fr</p>
-      <h3 style={h3}>Hébergement</h3>
-      <p style={p}>Le site est hébergé par Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis.<br/>Base de données hébergée par Turso (ChiselStrike Inc.).</p>
-      <h3 style={h3}>Propriété intellectuelle</h3>
-      <p style={p}>L'ensemble des contenus du site Huntly (textes, graphismes, logo, icônes, logiciels) est protégé par le droit de la propriété intellectuelle. Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation expresse est interdite.</p>
-      <h3 style={h3}>Données personnelles</h3>
-      <p style={p}>Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez d'un droit d'accès, de rectification et de suppression de vos données personnelles. Pour exercer ce droit, contactez : hello@huntly.fr.</p>
-      <h3 style={h3}>Cookies</h3>
-      <p style={p}>Le site utilise uniquement des cookies techniques nécessaires à son fonctionnement (authentification, session). Aucun cookie publicitaire ou de tracking n'est utilisé.</p>
-    </>)}
-
-    {page === "confidentialite" && (<>
-      <h2 style={h2}>Politique de confidentialité</h2>
-      <h3 style={h3}>1. Données collectées</h3>
-      <p style={p}>Lors de votre inscription, nous collectons : nom, adresse email, nom d'entreprise (optionnel). Lors de l'utilisation du service, nous collectons : historique de recherches, leads générés. Lors du paiement, vos données bancaires sont traitées directement par Stripe et ne transitent jamais par nos serveurs.</p>
-      <h3 style={h3}>2. Finalité du traitement</h3>
-      <p style={p}>Vos données sont utilisées pour : fournir le service de génération de leads, gérer votre compte et vos crédits, vous contacter en cas de besoin (support, mises à jour importantes). Nous ne vendons ni ne partageons vos données personnelles avec des tiers à des fins commerciales.</p>
-      <h3 style={h3}>3. Durée de conservation</h3>
-      <p style={p}>Vos données de compte sont conservées tant que votre compte est actif. Vos leads et historique de recherche sont conservés tant que votre compte existe. Vous pouvez demander la suppression de votre compte et de toutes vos données à tout moment en contactant hello@huntly.fr.</p>
-      <h3 style={h3}>4. Données des leads générés</h3>
-      <p style={p}>Les informations sur les entreprises (noms, emails, téléphones) sont obtenues à partir de sources publiquement accessibles sur le web (sites d'entreprises, annuaires professionnels, réseaux sociaux publics). Aucune donnée n'est obtenue par des moyens illicites.</p>
-      <h3 style={h3}>5. Sécurité</h3>
-      <p style={p}>Nous mettons en œuvre des mesures techniques et organisationnelles appropriées : chiffrement des mots de passe (bcrypt), connexions HTTPS, tokens JWT pour l'authentification, hébergement sécurisé.</p>
-      <h3 style={h3}>6. Vos droits</h3>
-      <p style={p}>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification, de suppression, de limitation du traitement et de portabilité de vos données. Pour exercer ces droits : hello@huntly.fr.</p>
-    </>)}
-
-    {page === "cgu" && (<>
-      <h2 style={h2}>Conditions Générales d'Utilisation</h2>
-      <h3 style={h3}>1. Objet</h3>
-      <p style={p}>Les présentes CGU régissent l'utilisation du service Huntly, un outil de génération de leads B2B propulsé par intelligence artificielle. En utilisant le service, vous acceptez les présentes conditions.</p>
-      <h3 style={h3}>2. Description du service</h3>
-      <p style={p}>Huntly permet de rechercher des entreprises correspondant à des critères (secteur d'activité, localisation) et de recevoir des informations de contact (nom, email, téléphone, site web) extraites de sources publiques sur le web.</p>
-      <h3 style={h3}>3. Inscription et compte</h3>
-      <p style={p}>L'accès au service nécessite la création d'un compte. Vous êtes responsable de la confidentialité de vos identifiants. Vous devez fournir des informations exactes lors de l'inscription.</p>
-      <h3 style={h3}>4. Crédits et paiement</h3>
-      <p style={p}>Le service fonctionne sur un système de crédits prépayés. 1 crédit = 1 lead généré. Les crédits achetés n'expirent pas et ne sont pas remboursables sauf en cas de défaut du service. Les paiements sont traités par Stripe de manière sécurisée.</p>
-      <h3 style={h3}>5. Utilisation acceptable</h3>
-      <p style={p}>Vous vous engagez à utiliser le service conformément à la législation en vigueur, notamment le RGPD. Il est interdit d'utiliser les données obtenues pour du spam, du harcèlement ou toute activité illégale. Vous êtes responsable de l'usage que vous faites des leads obtenus.</p>
-      <h3 style={h3}>6. Limitation de responsabilité</h3>
-      <p style={p}>Les informations fournies par Huntly proviennent de sources publiques et sont générées par intelligence artificielle. Nous ne garantissons pas l'exactitude, l'exhaustivité ou l'actualité des données. Huntly ne saurait être tenu responsable des dommages directs ou indirects résultant de l'utilisation des données fournies.</p>
-      <h3 style={h3}>7. Modification des CGU</h3>
-      <p style={p}>Nous nous réservons le droit de modifier les présentes CGU. Les utilisateurs seront informés de toute modification substantielle par email.</p>
-      <h3 style={h3}>8. Droit applicable</h3>
-      <p style={p}>Les présentes CGU sont régies par le droit français. Tout litige sera soumis aux tribunaux compétents de [Ville].</p>
-      <p style={p}>Dernière mise à jour : septembre 2026.</p>
-    </>)}
-  </div>);
-}
 
 export default function App() {
   const [token, setToken] = useState(null);
