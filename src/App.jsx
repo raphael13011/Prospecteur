@@ -636,7 +636,7 @@ export default function App() {
 }
 
 const S = {
-  root: { maxWidth: 800, margin: "0 auto", padding: "0 16px 0" },
+  root: { maxWidth: 1100, margin: "0 auto", padding: "0 24px 0" },
   ctr: { display: "flex", justifyContent: "center", alignItems: "center", minHeight: 300 },
   spin: { width: 28, height: 28, border: "3px solid #e5e7eb", borderTopColor: "#4f46e5", borderRadius: "50%", animation: "spin .7s linear infinite" },
   spn: { display: "inline-block", width: 15, height: 15, border: "2.5px solid rgba(255,255,255,.3)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin .6s linear infinite", marginRight: 8 },
@@ -657,7 +657,7 @@ const S = {
   creditBtn: { display: "flex", flexDirection: "column", alignItems: "center", background: "#f8fafc", borderRadius: 8, padding: "2px 14px", lineHeight: 1.2, border: "1px solid #e5e7eb", cursor: "pointer" },
   avBtn: { width: 34, height: 34, borderRadius: "50%", background: "#4f46e5", color: "#fff", border: "none", fontWeight: 700, fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" },
   av: { width: 48, height: 48, borderRadius: "50%", background: "#eef2ff", color: "#4f46e5", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18 },
-  sCard: { border: "1px solid #e5e7eb", borderRadius: 14, padding: "18px", marginBottom: 8, background: "#fff", transition: "box-shadow .2s" },
+  sCard: { border: "1px solid #e5e7eb", borderRadius: 14, padding: "18px", marginBottom: 8, background: "#fff", transition: "box-shadow .2s", maxWidth: 800, margin: "0 auto 8px" },
   nGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(72px, 1fr))", gap: 5, marginBottom: 14 },
   nBtn: { display: "flex", flexDirection: "column", alignItems: "center", gap: 3, padding: "9px 4px", borderRadius: 9, border: "1px solid #e5e7eb", background: "#fff", cursor: "pointer", transition: "all .12s" },
   fRow: { display: "flex", gap: 10, marginBottom: 8, flexWrap: "wrap" },
@@ -665,7 +665,7 @@ const S = {
   skelL: { height: 14, background: "#e5e7eb", borderRadius: 6 },
   secT: { fontSize: 18, fontWeight: 800, margin: 0, color: "#0f172a", letterSpacing: "-0.02em" },
   histI: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", border: "1px solid #e5e7eb", borderRadius: 10, marginBottom: 6, cursor: "pointer" },
-  lCard: { border: "1px solid #e5e7eb", borderRadius: 12, padding: "16px 20px", marginBottom: 8, cursor: "pointer", transition: "border .12s", animation: "slideUp .3s ease both" },
+  lCard: { border: "1px solid #e5e7eb", borderRadius: 12, padding: "16px 20px", marginBottom: 8, maxWidth: 800, margin: "0 auto 8px", cursor: "pointer", transition: "border .12s", animation: "slideUp .3s ease both" },
   ch: { padding: "3px 9px", background: "#f1f5f9", borderRadius: 6, fontSize: 12, color: "#64748b" },
   chL: { padding: "3px 9px", background: "#eef2ff", borderRadius: 6, fontSize: 12, color: "#4f46e5", textDecoration: "none", fontWeight: 500 },
   chOk: { padding: "3px 9px", background: "#ecfdf5", borderRadius: 6, fontSize: 12, color: "#059669", fontWeight: 500 },
