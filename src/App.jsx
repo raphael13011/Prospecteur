@@ -420,7 +420,7 @@ export default function App() {
             {view !== "search" && <button className="gb" style={S.gBtnS} onClick={() => setView("search")}>← Recherche</button>}
             <button style={S.avBtn} onClick={() => view === "account" ? setView("search") : setView("account")}>{(user?.name || "U")[0].toUpperCase()}</button>
           </>) : (
-            <button className="gb" style={{ ...S.gBtn, fontWeight: 700 }} onClick={() => setModalStep("auth")}>Connexion</button>
+            <button className="gb" style={{ padding: "7px 16px", background: "transparent", border: "1px solid #d1d5db", borderRadius: 8, fontSize: 13, fontWeight: 500, color: "#374151", cursor: "pointer" }} onClick={() => setModalStep("auth")}>Se connecter</button>
           )}
         </div>
       </div>
@@ -445,17 +445,45 @@ export default function App() {
 
       {!legalPage && view === "search" && (<>
         {/* HERO */}
-        {showLanding && (<div className="hero-gradient" style={{ textAlign: "center", padding: "48px 16px 8px", margin: "0 -16px", borderRadius: "0 0 24px 24px" }}>
-          <div style={{ display: "inline-block", padding: "5px 16px", borderRadius: 20, background: "#fff", border: "1px solid #e5e7eb", fontSize: 13, fontWeight: 600, color: "#0f172a", marginBottom: 20, boxShadow: "0 2px 8px rgba(0,0,0,.04)" }}>✨ Propulsé par l'intelligence artificielle</div>
-          <h1 className="hero-title" style={{ fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.15, color: "#0f172a", marginBottom: 16 }}>Trouvez des clients<br />pour n'importe<br />quel business</h1>
-          <p className="hero-sub" style={{ color: "#475569", maxWidth: 480, margin: "0 auto 28px", lineHeight: 1.6 }}>Choisissez un secteur et une ville. En 30 secondes, l'IA vous livre une liste de prospects avec email, téléphone et contact clé.</p>
-          <button className="cta-btn" onClick={scrollToForm} style={{ padding: "14px 36px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 10, fontSize: 16, fontWeight: 700, cursor: "pointer", marginBottom: 24, transition: "all .15s", boxShadow: "0 4px 14px rgba(0,0,0,.3)" }}>Essayer maintenant ↓</button>
+        {showLanding && (<div style={{ padding: "72px 0 0" }}>
+          <h1 style={{ fontSize: "clamp(32px, 5vw, 48px)", fontWeight: 500, letterSpacing: "-0.03em", lineHeight: 1.15, color: "#0f172a", marginBottom: 24, maxWidth: 600 }}>Trouvez des clients pour n'importe quel business.</h1>
+          <p style={{ fontSize: "clamp(16px, 2vw, 19px)", color: "#6b7280", maxWidth: 500, lineHeight: 1.7, marginBottom: 32 }}>L'IA parcourt le web et vous livre des prospects qualifiés avec email, téléphone et contact clé. En 30 secondes.</p>
+          <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap", marginBottom: 56 }}>
+            <button onClick={scrollToForm} style={{ padding: "10px 24px", background: "#0f172a", color: "#fff", border: "none", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "all .15s", letterSpacing: "-0.01em" }}>Commencer gratuitement ↓</button>
+            <button onClick={scrollToForm} style={{ padding: "10px 24px", background: "transparent", color: "#0f172a", border: "1px solid #d1d5db", borderRadius: 8, fontSize: 14, fontWeight: 500, cursor: "pointer", transition: "all .15s" }}>Voir une démo →</button>
+          </div>
+          {/* Product mockup */}
+          <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, overflow: "hidden", maxWidth: 720 }}>
+            <div style={{ padding: "8px 16px", background: "#f3f4f6", borderBottom: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ display: "flex", gap: 5 }}><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /><div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e5e7eb" }} /></div>
+              <div style={{ flex: 1, textAlign: "center", fontSize: 12, color: "#9ca3af" }}>huntly.fr</div>
+            </div>
+            <div style={{ padding: "20px" }}>
+              <div style={{ display: "flex", gap: 6, marginBottom: 16, flexWrap: "wrap" }}>
+                {["🔧 Artisans", "🍽 Restos", "🏠 Immo"].map(n => (
+                  <span key={n} style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 12, fontWeight: 500, background: n.includes("Artisans") ? "#f1f5f9" : "#fff" }}>{n}</span>
+                ))}
+                <span style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, color: "#9ca3af" }}>+9 secteurs</span>
+              </div>
+              <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+                <div style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, color: "#6b7280", background: "#fff" }}>Plombiers</div>
+                <div style={{ flex: 1, padding: "8px 12px", borderRadius: 8, border: "1px solid #e5e7eb", fontSize: 13, color: "#6b7280", background: "#fff" }}>Lyon</div>
+              </div>
+              <div style={{ padding: "10px", background: "#0f172a", borderRadius: 8, textAlign: "center", color: "#fff", fontSize: 13, fontWeight: 600, marginBottom: 16 }}>Trouver 10 prospects →</div>
+              {[{ c: "Plomberie Martin & Fils", l: "Lyon 3e", s: 92 }, { c: "Atelier Duval Rénovation", l: "Villeurbanne", s: 87 }, { c: "SOS Dépannage Express", l: "Lyon 7e", s: 84 }].map((r, i) => (
+                <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", borderTop: "1px solid #f3f4f6" }}>
+                  <div><div style={{ fontSize: 13, fontWeight: 600, color: "#111827" }}>{r.c}</div><div style={{ fontSize: 11, color: "#9ca3af" }}>{r.l} · Email · Tél</div></div>
+                  <span style={{ fontSize: 11, fontWeight: 600, color: "#fff", background: "#111827", padding: "2px 8px", borderRadius: 4 }}>{r.s}%</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>)}
 
         {!results && !loading && loggedIn && (<div style={{ padding: "12px 0 4px" }}><h2 style={{ fontSize: 22, fontWeight: 800 }}>Nouvelle recherche</h2></div>)}
 
         {/* SEARCH FORM */}
-        <div ref={formRef} style={{ ...S.sCard, ...(showLanding ? { marginTop: 24, boxShadow: "0 4px 20px rgba(0,0,0,.06)" } : {}) }}>
+        <div ref={formRef} style={{ ...S.sCard, ...(showLanding ? { marginTop: 48, boxShadow: "0 2px 12px rgba(0,0,0,.04)" } : {}) }}>
           <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
               <button onClick={() => { setSearchMode("b2b"); setAudienceResults(null); }} style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", background: searchMode === "b2b" ? "#fff" : "transparent", color: searchMode === "b2b" ? "#0f172a" : "#64748b", boxShadow: searchMode === "b2b" ? "0 1px 3px rgba(0,0,0,.08)" : "none" }}>🏢 Entreprises (B2B)</button>
               <button onClick={() => { setSearchMode("audiences"); setResults(null); }} style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", background: searchMode === "audiences" ? "#fff" : "transparent", color: searchMode === "audiences" ? "#0f172a" : "#64748b", boxShadow: searchMode === "audiences" ? "0 1px 3px rgba(0,0,0,.08)" : "none" }}>👥 Audiences (B2C)</button>
