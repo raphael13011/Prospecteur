@@ -340,6 +340,8 @@ export default function App() {
   const [target, setTarget] = useState("");
   const [count, setCount] = useState("10");
   const [picked, setPicked] = useState([]);
+  const [searchMode, setSearchMode] = useState("b2b");  // b2b | audiences
+  const [audienceResults, setAudienceResults] = useState(null);
   const [toast, setToast] = useState(null);
   const [emailModal, setEmailModal] = useState(null);
   const [genEmail, setGenEmail] = useState(null);
@@ -379,7 +381,19 @@ export default function App() {
     setError(null);
     if (!loggedIn) { setModalStep("auth"); return; }
     if (balance < 1) { setModalStep("pay"); return; }
-    doSearch(token);
+    if (searchMode === "audiences") { doAudienceSearch(token); } else { doSearch(token); }
+  };
+
+  const doAudienceSearch = async (t) => {
+    setModalStep(null); setLoading(true); setError(null); setAudienceResults(null); setResults(null);
+    const steps = ["Analyse de la cible…", "Recherche de communautés…", "Identification des groupes…", "Compilation…"];
+    let si = 0; setProgress(steps[0]);
+    const iv = setInterval(() => { si = Math.min(si + 1, steps.length - 1); setProgress(steps[si]); }, 5000);
+    try {
+      const d = await api("/leads?action=generate-audiences", { method: "POST", token: t, body: { industry, location, target, count: parseInt(count) || 10 } });
+      setAudienceResults({ audiences: d.audiences, meta: d.meta }); setBalance(d.balance);
+      flash(d.audiences.length + " audience" + (d.audiences.length > 1 ? "s" : "") + " trouvée" + (d.audiences.length > 1 ? "s" : ""));
+    } catch (e) { setError(e.message); } finally { clearInterval(iv); setLoading(false); setProgress(""); }
   };
 
   const doSearch = async (t) => {
@@ -412,7 +426,7 @@ export default function App() {
     setGenLoading(false);
   };
 
-  const goHome = () => { setView("search"); setResults(null); setLegalPage(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
+  const goHome = () => { setView("search"); setResults(null); setAudienceResults(null); setLegalPage(null); setError(null); setExpandedId(null); setPicked([]); setIndustry(""); setTarget(""); setLocation(""); window.scrollTo(0, 0); };
 
   if (!ready) return <div style={S.ctr}><div style={S.spin} /></div>;
 
@@ -496,7 +510,11 @@ export default function App() {
 
         {/* SEARCH FORM */}
         <div ref={formRef} style={{ ...S.sCard, ...(showLanding ? { marginTop: 24, boxShadow: "0 4px 20px rgba(0,0,0,.06)" } : {}) }}>
-          <div className="niche-grid" style={S.nGrid}>{NICHES.map(n => (
+          <div style={{ display: "flex", gap: 4, marginBottom: 14, background: "#f1f5f9", borderRadius: 8, padding: 3 }}>
+              <button onClick={() => { setSearchMode("b2b"); setAudienceResults(null); }} style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", background: searchMode === "b2b" ? "#fff" : "transparent", color: searchMode === "b2b" ? "#0f172a" : "#64748b", boxShadow: searchMode === "b2b" ? "0 1px 3px rgba(0,0,0,.08)" : "none" }}>🏢 Entreprises (B2B)</button>
+              <button onClick={() => { setSearchMode("audiences"); setResults(null); }} style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", transition: "all .15s", background: searchMode === "audiences" ? "#fff" : "transparent", color: searchMode === "audiences" ? "#0f172a" : "#64748b", boxShadow: searchMode === "audiences" ? "0 1px 3px rgba(0,0,0,.08)" : "none" }}>👥 Audiences (B2C)</button>
+            </div>
+            <div className="niche-grid" style={S.nGrid}>{NICHES.map(n => (
             <button key={n.l} className="nb" style={{ ...S.nBtn, ...(picked.includes(n.i) ? { borderColor: "#4f46e5", background: "#eef2ff" } : {}) }} onClick={() => toggleNiche(n)}>
               <span style={{ fontSize: 17 }}>{n.icon}</span>
               <span style={{ fontSize: 11, fontWeight: 600, color: picked.includes(n.i) ? "#4f46e5" : "#475569" }}>{n.l}</span>
@@ -512,7 +530,7 @@ export default function App() {
           {loggedIn && <p style={{ fontSize: 12, color: "#94a3b8", margin: "4px 0 0" }}>Solde : {balance} crédits</p>}
           {error && <div style={S.errBox}>{error}</div>}
           <button className="cta-btn" style={{ ...S.pBtn, marginTop: 10, background: "#4f46e5", ...(loading ? { opacity: .7, pointerEvents: "none" } : {}) }} onClick={handleSearch}>
-            {loading ? <><span style={S.spn} />{progress}</> : "Trouver " + (parseInt(count) || 10) + " prospects →"}
+            {loading ? <><span style={S.spn} />{progress}</> : searchMode === "audiences" ? "Trouver des audiences →" : "Trouver " + (parseInt(count) || 10) + " prospects →"}
           </button>
         </div>
 
@@ -547,6 +565,32 @@ export default function App() {
               </div>)}
             </div>))}
           {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{balance > 0 ? "Il vous reste " + balance + " crédit" + (balance > 1 ? "s" : "") : "Plus de crédits"}</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
+        </div>)}
+
+        {audienceResults && (<div>
+          <div style={{ margin: "20px 0 10px" }}>
+            <h2 style={S.secT}>{audienceResults.meta.count} audience{audienceResults.meta.count > 1 ? "s" : ""} trouvée{audienceResults.meta.count > 1 ? "s" : ""}</h2>
+            <p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>{audienceResults.meta.industry} · {audienceResults.meta.location}</p>
+          </div>
+          {audienceResults.audiences.map((a, i) => (
+            <div key={i} style={{ border: "1px solid #e5e7eb", borderRadius: 12, padding: "16px 20px", marginBottom: 8, animation: "slideUp .3s ease both", animationDelay: i * 0.04 + "s" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: "#0f172a" }}>{a.name}</div>
+                  <div style={{ fontSize: 12, color: "#94a3b8" }}>{a.platform} · {a.location}</div>
+                </div>
+                {a.members && <div style={{ padding: "3px 10px", borderRadius: 20, fontSize: 12, fontWeight: 700, color: "#4f46e5", background: "#eef2ff" }}>{a.members}</div>}
+              </div>
+              <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.5, margin: "0 0 8px" }}>{a.description}</p>
+              {a.relevance && <p style={{ fontSize: 12, color: "#059669", margin: "0 0 6px" }}>🎯 {a.relevance}</p>}
+              {a.tip && <p style={{ fontSize: 12, color: "#6366f1", margin: "0 0 8px", fontStyle: "italic" }}>💡 {a.tip}</p>}
+              <div style={{ display: "flex", gap: 6 }}>
+                {a.url && <a href={a.url} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>🔗 Ouvrir</a>}
+                <span style={S.ch}>{a.platform}</span>
+              </div>
+            </div>
+          ))}
+          {balance < 5 && (<div style={S.ups}><div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Plus de crédits</div><div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>Rechargez pour continuer.</div><button className="cta-btn" style={{ ...S.pBtn, padding: "10px 24px", fontSize: 14, background: "#4f46e5" }} onClick={() => setModalStep("pay")}>Acheter des crédits</button></div>)}
         </div>)}
 
         {showLanding && <LandingSections onCta={scrollToForm} onMentions={() => { setLegalPage("mentions"); window.scrollTo(0,0); }} onConfidentialite={() => { setLegalPage("confidentialite"); window.scrollTo(0,0); }} onCgu={() => { setLegalPage("cgu"); window.scrollTo(0,0); }} />}

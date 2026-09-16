@@ -1,6 +1,6 @@
 const Credit = require("../lib/models/credit");
 const { Search, Lead } = require("../lib/models/search");
-const { generateLeads, generateProspectEmail } = require("../lib/services/leadGenerator");
+const { generateLeads, generateProspectEmail, generateAudiences } = require("../lib/services/leadGenerator");
 const { requireAuth, handleCors } = require("../lib/auth");
 const db = require("../lib/db");
 
@@ -72,6 +72,24 @@ module.exports = async function handler(req, res) {
       const newBalance = await Credit.getBalance(userId);
       res.json({ email, balance: newBalance });
     } catch (err) { console.error(err); res.status(500).json({ error: "Erreur génération email." }); }
+    return;
+  }
+
+
+  // ─── POST generate-audiences ───
+  if (action === "generate-audiences" && req.method === "POST") {
+    const { industry, location, target, count: rawCount } = req.body;
+    if (!industry?.trim()) return res.status(400).json({ error: "Secteur requis." });
+    if (!location?.trim()) return res.status(400).json({ error: "Localisation requise." });
+    const balance = await Credit.getBalance(userId);
+    if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
+    const count = Math.min(parseInt(rawCount) || 10, 20, balance);
+    try {
+      const audiences = await generateAudiences({ industry, location, target, count });
+      await Credit.consume(userId, Math.ceil(audiences.length / 2));
+      const newBalance = await Credit.getBalance(userId);
+      res.json({ audiences, meta: { industry, location, target: target || null, count: audiences.length }, balance: newBalance });
+    } catch (err) { console.error(err); res.status(500).json({ error: err.message || "Erreur." }); }
     return;
   }
 
