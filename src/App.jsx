@@ -50,7 +50,7 @@ function Logo({ small }) {
       <circle cx={c} cy={c} r={z*0.15} fill="none" stroke="white" strokeWidth="2"/>
       <circle cx={c} cy={c} r={z*0.055} fill="white"/>
     </svg>
-    <span style={{ fontSize: small ? 16 : 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Huntly</span>
+    <span style={{ fontSize: small ? 16 : 22, fontWeight: 800, letterSpacing: "-0.03em", color: "#0f172a" }}>Leadora</span>
   </div>);
 }
 
@@ -265,7 +265,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
 
     {/* FOOTER */}
     <div style={{ padding: "24px 0", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, borderTop: "1px solid #f1f5f9" }}>
-      <div style={{ fontSize: 13, color: "#94a3b8" }}>© 2026 Huntly</div>
+      <div style={{ fontSize: 13, color: "#94a3b8" }}>© 2026 Leadora</div>
       <div style={{ display: "flex", gap: 20 }}>
         <button onClick={onMentions} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>Mentions légales</button>
         <button onClick={onConfidentialite} style={{ background: "none", border: "none", color: "#94a3b8", fontSize: 13, cursor: "pointer" }}>Confidentialité</button>
