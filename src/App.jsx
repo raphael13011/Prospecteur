@@ -151,7 +151,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     {/* PREVIEW */}
     <div style={{ padding: "48px 0", textAlign: "center" }}>
       <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 8 }}>Ce que vous obtenez</h2>
-      <p style={{ fontSize: 15, color: "#64748b", marginBottom: 32 }}>Résultat réel pour "Plombiers à Lyon"</p>
+      <p style={{ fontSize: 15, color: "#64748b", marginBottom: 32 }}>Extrait de notre base — Plombiers à Lyon</p>
       <div style={{ background: "#0f172a", borderRadius: 16, overflow: "hidden", maxWidth: 640, margin: "0 auto", textAlign: "left" }}>
         <div style={{ padding: "12px 20px", borderBottom: "1px solid #1e293b", fontSize: 13, color: "#64748b", display: "flex", justifyContent: "space-between" }}>
           <span>3 résultats</span><span>Plombiers · Lyon</span>
@@ -177,7 +177,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
 
     {/* FEATURES BENTO */}
     <div style={{ padding: "48px 0", textAlign: "center" }}>
-      <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 32 }}>Bien plus qu'une liste de noms</h2>
+      <h2 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.03em", marginBottom: 32 }}>Une base qui grandit chaque jour</h2>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, maxWidth: 800, margin: "0 auto" }}>
         <div style={{ ...light, textAlign: "left" }}>
           <div style={{ fontSize: 24, marginBottom: 12 }}>✉️</div>
@@ -227,7 +227,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
         {[{ icon: "🔒", t: "Paiement Stripe", d: "Leader mondial du paiement. Vos données bancaires ne passent jamais par nos serveurs." },
           { icon: "🇫🇷", t: "100% français", d: "Interface, données et support en français." },
           { icon: "🛡️", t: "RGPD conforme", d: "Sources publiques, intérêt légitime (art. 6.1.f). Zéro cookie publicitaire." },
-          { icon: "⚡", t: "Temps réel", d: "L'IA cherche sur le web à la demande. Pas de base de données statique." }
+          { icon: "⚡", t: "Agents IA 24/7", d: "Nos agents prospectent le web en continu pour alimenter et enrichir la base de données." }
         ].map((t, i) => (
           <div key={i} style={{ padding: "20px", background: "#f8fafc", borderRadius: 14, textAlign: "left" }}>
             <div style={{ fontSize: 24, marginBottom: 10 }}>{t.icon}</div>
@@ -259,7 +259,7 @@ function LandingSections({ onCta, onMentions, onConfidentialite, onCgu, inner })
     {/* CTA */}
     <div style={{ padding: "56px 24px", background: "#0f172a", borderRadius: 20, textAlign: "center", margin: "0 0 40px" }}>
       <h2 style={{ fontSize: 28, fontWeight: 800, color: "#fff", marginBottom: 12, letterSpacing: "-0.03em" }}>Prêt à trouver vos clients ?</h2>
-      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 24 }}>Commencez en 30 secondes.</p>
+      <p style={{ fontSize: 15, color: "#94a3b8", marginBottom: 24 }}>Nos agents ont déjà prospecté pour vous.</p>
       <button onClick={onCta} style={{ padding: "12px 32px", background: "#fff", color: "#0f172a", border: "none", borderRadius: 10, fontSize: 15, fontWeight: 600, cursor: "pointer" }}>Commencer →</button>
     </div>
 
@@ -458,7 +458,7 @@ export default function App() {
         {showLanding && (<div style={{ textAlign: "center", padding: "64px 0 48px" }}>
           <div style={{ display: "inline-flex", gap: 16, marginBottom: 24, flexWrap: "wrap", justifyContent: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", background: "#f1f5f9", borderRadius: 20, fontSize: 13, color: "#475569" }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />Propulsé par l'IA
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />Agents IA en continu
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 14px", background: "#f1f5f9", borderRadius: 20, fontSize: 13, color: "#475569" }}>⚡ Résultats en 30 secondes</div>
           </div>
