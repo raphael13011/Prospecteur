@@ -22,59 +22,96 @@ module.exports = async function handler(req, res) {
     const balance = await Credit.getBalance(userId);
     if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
     const count = Math.min(parseInt(rawCount) || 10, 20, balance);
-    try {
-      const leads = await generateLeads({ industry, location, target, count });
 
-      // Dedup: check against existing leads for this user
-      const existing = await db.execute({
+    try {
+      // Step 1: Check the shared pool for matching leads
+      const locationLower = location.toLowerCase().trim();
+      const industryTerms = industry.split(",").map(s => s.trim().toLowerCase()).filter(Boolean);
+
+      // Build LIKE clauses for industry matching
+      const industryWhere = industryTerms.map((_, i) => `LOWER(industry) LIKE ?`).join(" OR ");
+      const industryArgs = industryTerms.map(t => `%${t}%`);
+
+      const poolResults = await db.execute({
+        sql: `SELECT DISTINCT company, website, industry, location, description, size, 
+              contact_name, contact_role, email, email_verified, phone, linkedin, score, reason
+              FROM leads 
+              WHERE (${industryWhere}) AND LOWER(location) LIKE ?
+              ORDER BY score DESC LIMIT ?`,
+        args: [...industryArgs, `%${locationLower}%`, count * 2],
+      });
+
+      // Step 2: Filter out leads this user already has
+      const userExisting = await db.execute({
         sql: "SELECT company, email FROM leads WHERE user_id = ?",
         args: [userId],
       });
-      const existingSet = new Set(existing.rows.map(r => (r.company || "").toLowerCase()));
-      const existingEmails = new Set(existing.rows.filter(r => r.email).map(r => r.email.toLowerCase()));
+      const userCompanies = new Set(userExisting.rows.map(r => (r.company || "").toLowerCase()));
+      const userEmails = new Set(userExisting.rows.filter(r => r.email).map(r => r.email.toLowerCase()));
 
-      const deduped = leads.map(l => ({
-        ...l,
-        is_duplicate: existingSet.has((l.company || "").toLowerCase()) || 
-                      (l.email && existingEmails.has(l.email.toLowerCase())),
-      }));
+      const poolLeads = poolResults.rows
+        .filter(l => !userCompanies.has((l.company || "").toLowerCase()) && 
+                     !(l.email && userEmails.has(l.email.toLowerCase())))
+        .slice(0, count)
+        .map(l => ({
+          company: l.company, website: l.website, industry: l.industry,
+          location: l.location, description: l.description, size: l.size,
+          contact_name: l.contact_name, contact_role: l.contact_role,
+          email: l.email, email_verified: !!l.email_verified,
+          phone: l.phone, linkedin: l.linkedin,
+          score: l.score, reason: l.reason,
+          is_duplicate: false, from_pool: true,
+        }));
 
-      const newLeads = deduped.filter(l => !l.is_duplicate);
-      const dupCount = deduped.length - newLeads.length;
+      const poolCount = poolLeads.length;
+      const remaining = count - poolCount;
+      let aiLeads = [];
 
-      // Save search
-      const searchId = await Search.create(userId, { industry, location, target, leadCount: newLeads.length });
-      if (newLeads.length > 0) await Lead.createBulk(searchId, userId, newLeads);
+      // Step 3: If we need more, call the AI
+      if (remaining > 0) {
+        const excludeNames = [...userCompanies, ...poolLeads.map(l => l.company.toLowerCase())];
+        const raw = await generateLeads({ industry, location, target, count: remaining });
 
-      // Only charge for new leads
-      if (newLeads.length > 0) await Credit.consume(userId, newLeads.length);
+        // Dedup AI results against pool + user existing
+        const allKnown = new Set([...excludeNames]);
+        aiLeads = raw
+          .filter(l => {
+            const key = (l.company || "").toLowerCase();
+            if (allKnown.has(key)) return false;
+            allKnown.add(key);
+            return true;
+          })
+          .map(l => ({ ...l, is_duplicate: false, from_pool: false }));
+      }
+
+      const allLeads = [...poolLeads, ...aiLeads];
+
+      // Step 4: Save everything
+      const searchId = await Search.create(userId, { industry, location, target, leadCount: allLeads.length });
+      if (allLeads.length > 0) await Lead.createBulk(searchId, userId, allLeads);
+
+      // Charge only for new AI leads (pool leads are free or half-price)
+      const aiCount = aiLeads.length;
+      const chargeAmount = Math.max(1, Math.ceil(poolCount * 0.5) + aiCount);
+      await Credit.consume(userId, Math.min(chargeAmount, allLeads.length));
       const newBalance = await Credit.getBalance(userId);
 
       res.json({
         search_id: searchId,
-        leads: deduped,
-        meta: { industry, location, target: target || null, count: deduped.length, new_count: newLeads.length, duplicate_count: dupCount },
+        leads: allLeads,
+        meta: {
+          industry, location, target: target || null,
+          count: allLeads.length,
+          from_pool: poolCount,
+          from_ai: aiCount,
+          new_count: allLeads.length,
+          duplicate_count: 0,
+        },
         balance: newBalance,
       });
     } catch (err) { console.error(err); res.status(500).json({ error: err.message || "Erreur génération." }); }
     return;
   }
-
-  // ─── POST generate-email ───
-  if (action === "generate-email" && req.method === "POST") {
-    const { lead, userCompany, userActivity } = req.body;
-    if (!lead?.company) return res.status(400).json({ error: "Lead requis." });
-    const balance = await Credit.getBalance(userId);
-    if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
-    try {
-      const email = await generateProspectEmail({ lead, userCompany, userActivity });
-      await Credit.consume(userId, 1);
-      const newBalance = await Credit.getBalance(userId);
-      res.json({ email, balance: newBalance });
-    } catch (err) { console.error(err); res.status(500).json({ error: "Erreur génération email." }); }
-    return;
-  }
-
 
   // ─── POST generate-audiences ───
   if (action === "generate-audiences" && req.method === "POST") {
@@ -90,6 +127,21 @@ module.exports = async function handler(req, res) {
       const newBalance = await Credit.getBalance(userId);
       res.json({ audiences, meta: { industry, location, target: target || null, count: audiences.length }, balance: newBalance });
     } catch (err) { console.error(err); res.status(500).json({ error: err.message || "Erreur." }); }
+    return;
+  }
+
+  // ─── POST generate-email ───
+  if (action === "generate-email" && req.method === "POST") {
+    const { lead, userCompany, userActivity } = req.body;
+    if (!lead?.company) return res.status(400).json({ error: "Lead requis." });
+    const balance = await Credit.getBalance(userId);
+    if (balance < 1) return res.status(429).json({ error: "Plus de crédits.", balance: 0 });
+    try {
+      const email = await generateProspectEmail({ lead, userCompany, userActivity });
+      await Credit.consume(userId, 1);
+      const newBalance = await Credit.getBalance(userId);
+      res.json({ email, balance: newBalance });
+    } catch (err) { console.error(err); res.status(500).json({ error: "Erreur génération email." }); }
     return;
   }
 
@@ -129,6 +181,13 @@ module.exports = async function handler(req, res) {
     const result = await Search.getWithLeads(id, userId);
     if (!result) return res.status(404).json({ error: "Recherche introuvable." });
     res.json(result);
+    return;
+  }
+
+  // ─── GET pool-stats (public) ───
+  if (action === "pool-stats" && req.method === "GET") {
+    const stats = await db.execute({ sql: "SELECT COUNT(*) as total, COUNT(DISTINCT industry) as industries, COUNT(DISTINCT location) as cities FROM leads" });
+    res.json({ total: Number(stats.rows[0].total), industries: Number(stats.rows[0].industries), cities: Number(stats.rows[0].cities) });
     return;
   }
 

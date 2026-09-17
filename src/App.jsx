@@ -297,6 +297,7 @@ export default function App() {
   const [searchMode, setSearchMode] = useState("b2b");  // b2b | audiences
   const [audienceResults, setAudienceResults] = useState(null);
   const [toast, setToast] = useState(null);
+  const [poolStats, setPoolStats] = useState(null);
   const [emailModal, setEmailModal] = useState(null);
   const [genEmail, setGenEmail] = useState(null);
   const [genLoading, setGenLoading] = useState(false);
@@ -312,6 +313,7 @@ export default function App() {
       if (t) { try { const d = await api("/auth?action=me", { token: t }); setToken(t); setUser(d.user); setBalance(d.balance);
         try { const h = await api("/leads?action=history", { token: t }); setHistory(h.searches || []); } catch {} } catch { clearToken(); } }
       setReady(true);
+      try { const ps = await api("/leads?action=pool-stats"); setPoolStats(ps); } catch {}
       const params = new URLSearchParams(window.location.search);
       if (params.get("status") === "success") { window.history.replaceState({}, "", "/");
         setTimeout(() => { const t2 = loadToken(); if (t2) api("/auth?action=me", { token: t2 }).then(d => { setBalance(d.balance); flash("Crédits ajoutés !"); }).catch(() => {}); }, 1000); }
@@ -468,7 +470,7 @@ export default function App() {
           </div>
           {/* Bento stats */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, maxWidth: 560, margin: "0 auto" }}>
-            {[{ n: "30s", d: "par recherche" }, { n: "0,12€", d: "par lead" }, { n: "12+", d: "secteurs" }].map((s, i) => (
+            {[{ n: poolStats ? (poolStats.total > 1000 ? Math.floor(poolStats.total/1000) + "k+" : poolStats.total + "+") : "0+", d: "leads en base" }, { n: "30s", d: "par recherche" }, { n: "0,12€", d: "par lead" }].map((s, i) => (
               <div key={i} style={{ padding: "20px 16px", background: "#0f172a", borderRadius: 14, textAlign: "center" }}>
                 <div style={{ fontSize: 24, fontWeight: 800, color: "#fff", letterSpacing: "-0.02em" }}>{s.n}</div>
                 <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4 }}>{s.d}</div>
@@ -522,6 +524,7 @@ export default function App() {
               </div>
               <p style={{ fontSize: 13.5, color: "#475569", lineHeight: 1.5, margin: "8px 0 10px" }}>{l.description}</p>
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {l.from_pool && <span style={{ padding: "4px 10px", background: "#0f172a", borderRadius: 8, fontSize: 12, color: "#fff", fontWeight: 600 }}>⚡ Base</span>}
                 {l.size && <span style={S.ch}>👥 {l.size}</span>}
                 {l.website && <a href={l.website} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>🌐 Site</a>}
                 {l.linkedin && <a href={l.linkedin} target="_blank" rel="noopener noreferrer" style={S.chL} onClick={e => e.stopPropagation()}>💼 LinkedIn</a>}
